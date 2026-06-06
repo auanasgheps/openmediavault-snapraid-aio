@@ -91,7 +91,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         // Get the configuration object.
         $db = \OMV\Config\Database::getInstance();
         $result = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
-        $result["services"] = explode(",", $result["services"]);
+        $result["services"] = strlen($result["services"]) ? explode(",", $result["services"]) : [];
         return $result;
     }
 
