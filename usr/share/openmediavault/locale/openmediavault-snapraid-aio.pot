@@ -1,0 +1,219 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the openmediavault-snapraid-aio package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-snapraid-aio\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-31 01:28+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "/etc/snapraid does not exist!"
+msgstr ""
+
+msgid "0 = scrub every time."
+msgstr ""
+
+msgid "0 disables. Example&colon; 0.76 = 3800/5000 added/deleted."
+msgstr ""
+
+msgid "0=always force sync, -1=never force sync, >0=number of warnings before forced sync."
+msgstr ""
+
+msgid "Add/Delete ratio threshold"
+msgstr ""
+
+msgid "After hook command"
+msgstr ""
+
+msgid "After hook name"
+msgstr ""
+
+msgid "Apprise Email Notifications"
+msgstr ""
+
+msgid "Apprise Email URL"
+msgstr ""
+
+msgid "Apprise Notifications"
+msgstr ""
+
+msgid "Apprise URL"
+msgstr ""
+
+msgid "Attach report"
+msgstr ""
+
+msgid "Before hook command"
+msgstr ""
+
+msgid "Before hook name"
+msgstr ""
+
+msgid "Config File"
+msgstr ""
+
+msgid "Configs"
+msgstr ""
+
+msgid "Create"
+msgstr ""
+
+msgid "Created config."
+msgstr ""
+
+msgid "Custom hooks"
+msgstr ""
+
+msgid "Custom notification hook"
+msgstr ""
+
+msgid "Delete threshold"
+msgstr ""
+
+msgid "Docker and service management"
+msgstr ""
+
+msgid "Docker mode"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Edit config."
+msgstr ""
+
+msgid "Enable"
+msgstr ""
+
+msgid "Enable custom hooks"
+msgstr ""
+
+msgid "Execute before spindown"
+msgstr ""
+
+msgid "Force zero-sized file sync"
+msgstr ""
+
+msgid "Healthchecks"
+msgstr ""
+
+msgid "Healthchecks URL"
+msgstr ""
+
+msgid "Healthchecks UUID"
+msgstr ""
+
+msgid "Ignore pattern"
+msgstr ""
+
+msgid "Local container list"
+msgstr ""
+
+msgid "Log SMART info"
+msgstr ""
+
+msgid "Log retention (days)"
+msgstr ""
+
+msgid "Manage Docker containers / services"
+msgstr ""
+
+msgid "Manage local Docker containers"
+msgstr ""
+
+msgid "Notify"
+msgstr ""
+
+msgid "Only UUID, not full URL."
+msgstr ""
+
+msgid "Pause / unpause"
+msgstr ""
+
+msgid "Pre-hash data"
+msgstr ""
+
+msgid "Run 'snapraid status'"
+msgstr ""
+
+msgid "Script or command to call instead of default mail. SUBJECT and BODY are passed as parameters."
+msgstr ""
+
+msgid "Scrub age (days)"
+msgstr ""
+
+msgid "Scrub every N runs"
+msgstr ""
+
+msgid "Scrub new blocks after sync"
+msgstr ""
+
+msgid "Scrub percent"
+msgstr ""
+
+msgid "Send Apprise email"
+msgstr ""
+
+msgid "Send SMART log via Telegram/Discord"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "SnapRAID AIO"
+msgstr ""
+
+msgid "SnapRAID config file"
+msgstr ""
+
+msgid "SnapRAID log directory"
+msgstr ""
+
+msgid "SnapRAID-AIO"
+msgstr ""
+
+msgid "Stop / restart"
+msgstr ""
+
+msgid "Sync warning threshold"
+msgstr ""
+
+msgid "Thresholds and scrub settings"
+msgstr ""
+
+msgid "Update threshold"
+msgstr ""
+
+msgid "Updated SnapRAID AIO settings."
+msgstr ""
+
+msgid "Use Apprise"
+msgstr ""
+
+msgid "Use Healthchecks.io"
+msgstr ""
+
+msgid "Use hd-idle spindown"
+msgstr ""
+
+msgid "Verbose output in notification"
+msgstr ""
+
+msgid "not installed"
+msgstr ""
+
+msgid "running"
+msgstr ""
+
+msgid "stopped"
+msgstr ""
