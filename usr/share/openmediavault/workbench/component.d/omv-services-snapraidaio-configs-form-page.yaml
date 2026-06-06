@@ -234,6 +234,7 @@ data:
         name: ignore_pattern
         label: _("Ignore pattern")
         value: ""
+        hint: _("Space-separated glob patterns to exclude from diff counts. Example&colon; *.tmp /var/cache/* */backup/*")
 
       - type: divider
         title: _("Docker and service management")
