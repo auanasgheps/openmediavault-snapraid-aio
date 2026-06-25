@@ -8,29 +8,29 @@ CONFIG_VERSION="3.4"
 
 ### NOTIFICATION SETTINGS ###
 
-EMAIL_ADDRESS="{{ config.email_address | default('', true) }}"
-FROM_EMAIL_ADDRESS="{{ config.from_email_address | default('', true) }}"
+EMAIL_ADDRESS="{{ salt['omv_conf.get_by_filter']('conf.system.notification.email', [])[0].get('sender', '') if salt['omv_conf.get_by_filter']('conf.system.notification.email', []) else '' }}"
+FROM_EMAIL_ADDRESS="{{ salt['omv_conf.get_by_filter']('conf.system.notification.email', [])[0].get('sender', '') if salt['omv_conf.get_by_filter']('conf.system.notification.email', []) else '' }}"
 
-CHECK_UPDATES={{ 1 if (config.check_updates | default(True) | to_bool) else 0 }}
+CHECK_UPDATES=0
 
 HEALTHCHECKS={{ 1 if (config.healthchecks | default(False) | to_bool) else 0 }}
 HEALTHCHECKS_ID="{{ config.healthchecks_id | default('', true) }}"
 HEALTHCHECKS_URL="{{ config.healthchecks_url | default('https://hc-ping.com/', true) }}"
 
 APPRISE={{ 1 if (config.apprise | default(False) | to_bool) else 0 }}
-APPRISE_URL="{{ config.apprise_url | default('', true) }}"
+APPRISE_URL=("{{ config.apprise_url | default('', true) }}")
 APPRISE_ATTACH={{ 1 if (config.apprise_attach | default(False) | to_bool) else 0 }}
 
 APPRISE_EMAIL={{ 1 if (config.apprise_email | default(False) | to_bool) else 0 }}
 APPRISE_EMAIL_ATTACH={{ 1 if (config.apprise_email_attach | default(False) | to_bool) else 0 }}
 APPRISE_EMAIL_URL='{{ config.apprise_email_url | default('', true) }}'
 
-TELEGRAM={{ 1 if (config.telegram | default(False) | to_bool) else 0 }}
-TELEGRAM_TOKEN="{{ config.telegram_token | default('', true) }}"
-TELEGRAM_CHAT_ID="{{ config.telegram_chat_id | default('', true) }}"
+TELEGRAM=0
+TELEGRAM_TOKEN=""
+TELEGRAM_CHAT_ID=""
 
-DISCORD={{ 1 if (config.discord | default(False) | to_bool) else 0 }}
-DISCORD_WEBHOOK_URL="{{ config.discord_webhook_url | default('', true) }}"
+DISCORD=0
+DISCORD_WEBHOOK_URL=""
 
 HOOK_NOTIFICATION="{{ config.hook_notification | default('', true) }}"
 
@@ -73,6 +73,11 @@ DOCKER_MODE={{ config.docker_mode | default(1) }}
 
 DOCKER_LOCAL={{ 1 if (config.docker_local | default(False) | to_bool) else 0 }}
 SERVICES="{{ config.services | default('', true) | replace(",", " ") }}"
+
+DOCKER_REMOTE={{ 1 if (config.docker_remote | default(False) | to_bool) else 0 }}
+DOCKER_USER="{{ config.docker_user | default('', true) }}"
+DOCKER_HOST_SERVICES=({% for line in (config.docker_host_services | default('', true)).splitlines() %}{% if line.strip() %}"{{ line.strip() }}"{{ " " if not loop.last }}{% endif %}{% endfor %})
+DOCKER_DELAY={{ config.docker_delay | default(0) }}
 
 ### CUSTOM HOOKS ###
 

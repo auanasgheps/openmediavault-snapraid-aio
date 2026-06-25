@@ -61,7 +61,7 @@ data:
         fields:
           - type: checkbox
             name: apprise
-            label: _("Use Apprise")
+            label: _("Enable Apprise")
             value: false
           - type: textInput
             name: apprise_url
@@ -90,7 +90,7 @@ data:
         fields:
           - type: checkbox
             name: apprise_email
-            label: _("Send Apprise email")
+            label: _("Enable Apprise email")
             value: false
           - type: checkbox
             name: apprise_email_attach
@@ -122,41 +122,47 @@ data:
         hint: _("Script or command to call instead of default mail. SUBJECT and BODY are passed as parameters.")
 
       - type: divider
-        title: _("Thresholds and scrub settings")
+        title: _("Sync thresholds")
       - type: numberInput
         name: del_threshold
         label: _("Delete threshold")
         value: 500
         min: 0
+        hint: _("Abort sync if more than N files were deleted since last run. 0 disables.")
       - type: numberInput
         name: up_threshold
         label: _("Update threshold")
         value: 500
         min: 0
+        hint: _("Abort sync if more than N files were updated since last run. 0 disables.")
       - type: numberInput
         name: add_del_threshold
         label: _("Add/Delete ratio threshold")
         value: 0
         min: 0
         step: 0.01
-        hint: _("0 disables. Example&colon; 0.76 = 3800/5000 added/deleted.")
+        hint: _("Allow sync even if delete threshold is exceeded, if enough files were also added. 0 disables. Example&colon; 0.76 means at least 76% of deleted files must have a matching add.")
       - type: numberInput
         name: sync_warn_threshold
         label: _("Sync warning threshold")
         value: -1
-        hint: _("0=always force sync, -1=never force sync, >0=number of warnings before forced sync.")
+        hint: _("Number of times a threshold warning is issued before forcing a sync anyway. 0 = always force, -1 = never force.")
 
+      - type: divider
+        title: _("Scrub settings")
       - type: numberInput
         name: scrub_percent
-        label: _("Scrub percent")
+        label: _("Scrub percentage")
         value: 5
         min: 0
         max: 100
+        hint: _("Percentage of the array to verify per run.")
       - type: numberInput
         name: scrub_age
         label: _("Scrub age (days)")
         value: 10
         min: 0
+        hint: _("Only scrub blocks that have not been verified in the last N days.")
       - type: checkbox
         name: scrub_new
         label: _("Scrub new blocks after sync")
@@ -166,35 +172,43 @@ data:
         label: _("Scrub every N runs")
         value: 0
         min: 0
-        hint: _("0 = scrub every time.")
+        hint: _("Run scrub only every N script executions. 0 = scrub every time.")
 
+      - type: divider
+        title: _("SnapRAID options")
       - type: checkbox
         name: prehash
         label: _("Pre-hash data")
         value: true
+        hint: _("Read data twice before syncing to detect silent read errors. Recommended.")
       - type: checkbox
         name: force_zero
-        label: _("Force zero-sized file sync")
+        label: _("Sync zero-sized files")
         value: false
+        hint: _("SnapRAID skips zero-sized files by default. Enable to include them.")
       - type: checkbox
         name: spindown
-        label: _("Use hd-idle spindown")
+        label: _("Spin down disks when done")
         value: false
+        hint: _("Spin down disks after the script completes using hd-idle.")
 
       - type: checkbox
         name: verbosity
         label: _("Verbose output in notification")
         value: false
+        hint: _("Include full SnapRAID output in the notification. May result in large messages.")
 
       - type: numberInput
         name: retention_days
         label: _("Log retention (days)")
         value: 0
         min: 0
+        hint: _("Days to keep log files. 0 keeps logs forever.")
       - type: textInput
         name: snapraid_log_dir
         label: _("SnapRAID log directory")
         value: ""
+        hint: _("Directory for log files. Leave empty to use the home directory.")
 
       - type: container
         fields:
@@ -204,7 +218,7 @@ data:
             value: true
           - type: checkbox
             name: smart_log_notify
-            label: _("Send SMART log via Telegram/Discord")
+            label: _("Include SMART log in notification")
             value: false
             modifiers:
               - type: disabled
@@ -221,7 +235,7 @@ data:
             value: false
           - type: checkbox
             name: snap_status_notify
-            label: _("Notify")
+            label: _("Include status report in notification")
             value: false
             modifiers:
               - type: disabled
@@ -276,6 +290,48 @@ data:
                 prop: docker_local
 
       - type: divider
+        title: _("Remote Docker management")
+      - type: checkbox
+        name: docker_remote
+        label: _("Manage remote Docker containers")
+        value: false
+      - type: textInput
+        name: docker_user
+        label: _("SSH user")
+        value: ""
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: docker_remote
+      - type: textArea
+        name: docker_host_services
+        label: _("Remote hosts and containers")
+        monospaced: true
+        rows: 4
+        value: ""
+        hint: _("One entry per line: HOST_IP:container1 container2 container3")
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: docker_remote
+      - type: numberInput
+        name: docker_delay
+        label: _("Service start delay (seconds)")
+        value: 0
+        min: 0
+        hint: _("Seconds to wait after restarting services before continuing.")
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: manage_services
+
+      - type: divider
         title: _("Custom hooks")
       - type: checkbox
         name: custom_hook
@@ -286,28 +342,33 @@ data:
         name: before_hook_name
         label: _("Before hook name")
         value: ""
+        hint: _("Display name shown in the log output.")
       - type: textArea
         name: before_hook_cmd
         label: _("Before hook command")
         monospaced: true
         rows: 2
         value: ""
+        hint: _("Shell command or script path. Runs before SnapRAID operations start.")
 
       - type: textInput
         name: after_hook_name
         label: _("After hook name")
         value: ""
+        hint: _("Display name shown in the log output.")
       - type: textArea
         name: after_hook_cmd
         label: _("After hook command")
         monospaced: true
         rows: 2
         value: ""
+        hint: _("Shell command or script path. Runs after SnapRAID operations complete.")
 
       - type: checkbox
         name: execute_before_spindown
-        label: _("Execute before spindown")
+        label: _("Execute after hook before spindown")
         value: false
+        hint: _("Run the after hook before spinning down disks instead of after.")
     buttons:
       - template: submit
       - template: cancel

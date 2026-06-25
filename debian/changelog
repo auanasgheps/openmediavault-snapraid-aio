@@ -1,3 +1,21 @@
+openmediavault-snapraid-aio (8.1) stable; urgency=low
+
+  * Update bundled snapraid-aio-script to v3.4 stable release
+  * Add Docker remote management fields to datamodel: docker_remote,
+    docker_user, docker_host_services, docker_delay
+  * Fix APPRISE_URL rendered as Bash array in generated config file
+  * Disable Telegram and Discord integrations (superseded by Apprise)
+  * Hardcode CHECK_UPDATES=0; updates ship with the package
+  * Wire EMAIL_ADDRESS/FROM_EMAIL_ADDRESS from OMV system email config
+  * Split UI threshold section into Sync thresholds, Scrub settings,
+    and SnapRAID options sections
+  * Add Remote Docker management section to config form
+  * Add descriptive hints to fields that previously had none
+  * Fix misleading labels: force_zero, spindown, snap_status_notify,
+    apprise, apprise_email, execute_before_spindown, smart_log_notify
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 25 Jun 2026 00:00:00 +0000
+
 openmediavault-snapraid-aio (8.0) stable; urgency=low
 
   * Initial release
