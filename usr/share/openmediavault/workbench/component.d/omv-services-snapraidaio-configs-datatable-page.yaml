@@ -29,6 +29,15 @@ data:
         execute:
           type: url
           url: "/services/snapraidaio/configs/edit/{{ _selected[0].uuid }}"
+      - type: iconButton
+        icon: mdi:clock-outline
+        tooltip: _("Schedule")
+        enabledConstraints:
+          minSelected: 1
+          maxSelected: 1
+        execute:
+          type: url
+          url: "/services/snapraidaio/configs/schedule/{{ _selected[0].uuid }}"
       - template: delete
         execute:
           type: request

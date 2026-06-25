@@ -1,19 +1,6 @@
 [
   {
     "type": "rpc",
-    "id": "rpc.snapraidaio.set",
-    "params": {
-      "type": "object",
-      "properties": {
-        "enable": {
-          "type": "boolean",
-          "required": true
-        }
-      }
-    }
-  },
-  {
-    "type": "rpc",
     "id": "rpc.snapraidaio.setconfig",
     "params": {
       "type": "object",

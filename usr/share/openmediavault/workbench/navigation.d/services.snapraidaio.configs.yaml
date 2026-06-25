@@ -1,8 +1,0 @@
-version: "1.0"
-type: navigation-item
-data:
-  path: "services.snapraidaio.configs"
-  text: _("Configs")
-  position: 20
-  icon: mdi:file-document-multiple-outline
-  url: "/services/snapraidaio/configs"

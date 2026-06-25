@@ -26,7 +26,6 @@ xpath="/config/services/${xname}"
 
 if ! omv_config_exists "${xpath}"; then
   omv_config_add_node "/config/services" "${xname}"
-  omv_config_add_key "${xpath}" "enable" "0"
   omv_config_add_node "${xpath}" "configs" ""
 fi
 

@@ -14,8 +14,13 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix misleading labels: force_zero, spindown, snap_status_notify,
     apprise, apprise_email, execute_before_spindown, smart_log_notify
   * Fix confdb create script missing executable bit in git
+  * Replace global enable toggle with per-config Schedule button on the
+    datatable; each config gets its own cron entry via OMV's Cron RPC,
+    keyed by the config UUID (getSchedule/setSchedule proxy methods)
+  * Remove Settings page, Settings navigation entry, and global enable field
+  * Remove enable if/else from Salt template; configs are always rendered
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 25 Jun 2026 00:00:00 +0000
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 25 Jun 2026 00:00:00 +0000
 
 openmediavault-snapraid-aio (8.0) stable; urgency=low
 

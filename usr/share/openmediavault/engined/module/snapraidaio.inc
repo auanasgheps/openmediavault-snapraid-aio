@@ -28,11 +28,6 @@ class OMVModuleSnapRaidAio extends \OMV\Engine\Module\ServiceAbstract
     public function bindListeners(\OMV\Engine\Notify\Dispatcher $dispatcher)
     {
         $dispatcher->addListener(
-            OMV_NOTIFY_MODIFY,
-            "org.openmediavault.conf.service.snapraidaio",
-            [ $this, "setDirty" ]
-        );
-        $dispatcher->addListener(
             OMV_NOTIFY_CREATE | OMV_NOTIFY_MODIFY | OMV_NOTIFY_DELETE,
             "org.openmediavault.conf.service.snapraidaio.config",
             [ $this, "setDirty" ]

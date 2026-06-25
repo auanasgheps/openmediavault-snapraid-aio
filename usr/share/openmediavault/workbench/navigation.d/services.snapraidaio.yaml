@@ -4,4 +4,4 @@ data:
   path: "services.snapraidaio"
   text: _("SnapRAID-AIO")
   icon: "mdi:archive-check-outline"
-  url: "/services/snapraidaio"
+  url: "/services/snapraidaio/configs"

@@ -1,0 +1,8 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/snapraidaio/configs/schedule/:uuid"
+  title: _("Schedule")
+  editing: true
+  notificationTitle: _("Updated schedule.")
+  component: omv-services-snapraidaio-configs-schedule-form-page

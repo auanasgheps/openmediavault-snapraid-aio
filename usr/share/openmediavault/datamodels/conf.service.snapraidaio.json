@@ -6,15 +6,7 @@
     "xpath": "//services/snapraidaio",
     "iterable": false
   },
-  "enable": {
-    "type": "boolean",
-    "default": false
-  },
   "properties": {
-    "enable": {
-      "type": "boolean",
-      "default": false
-    },
     "configs": {
       "type": "object",
       "properties": {

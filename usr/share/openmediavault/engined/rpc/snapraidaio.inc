@@ -28,44 +28,14 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
 
     public function initialize()
     {
-        $this->registerMethod("get");
-        $this->registerMethod("set");
-
         $this->registerMethod("getConfigList");
         $this->registerMethod("getConfig");
         $this->registerMethod("setConfig");
         $this->registerMethod("deleteConfig");
         $this->registerMethod("enumerateConfigFiles");
         $this->registerMethod("getContainers");
-    }
-
-    public function get($params, $context)
-    {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
-        // Get the configuration object.
-        $db = \OMV\Config\Database::getInstance();
-        $object = $db->get("conf.service.snapraidaio");
-        // Remove useless properties from the object.
-        $object->remove("configs");
-        return $object->getAssoc();
-    }
-
-    public function set($params, $context)
-    {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
-        // Validate the parameters of the RPC service method.
-        $this->validateMethodParams($params, "rpc.snapraidaio.set");
-        // Get the existing configuration object.
-        $db = \OMV\Config\Database::getInstance();
-        $object = $db->get("conf.service.snapraidaio");
-        $object->setAssoc($params);
-        $db->set($object);
-        // Remove useless properties from the object.
-        $object->remove("configs");
-        // Return the configuration object.
-        return $object->getAssoc();
+        $this->registerMethod("getSchedule");
+        $this->registerMethod("setSchedule");
     }
 
     public function getConfigList($params, $context)
@@ -203,5 +173,31 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             }
         }
         return ($objects);
+    }
+
+    public function getSchedule($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, "rpc.common.objectuuid");
+        // Proxy to the Cron RPC, keyed by the config UUID.
+        return \OMV\Rpc\Rpc::call("Cron", "get",
+            ["uuid" => $params["uuid"]], $context);
+    }
+
+    public function setSchedule($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
+        // Ensure mandatory fields the Cron RPC expects are present.
+        $params["type"] = "userdefined";
+        $params["username"] = "root";
+        $params["command"] = sprintf(
+            "/usr/sbin/snapraid-aio-script.sh -c /etc/snapraid-aio-%s.conf",
+            $params["uuid"]
+        );
+        // Proxy to the Cron RPC.
+        return \OMV\Rpc\Rpc::call("Cron", "set", $params, $context);
     }
 }

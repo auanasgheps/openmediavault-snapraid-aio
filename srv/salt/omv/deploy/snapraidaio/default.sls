@@ -17,8 +17,6 @@
 
 {% set aio = salt['omv_conf.get']('conf.service.snapraidaio') %}
 
-{% if aio.enable | to_bool %}
-
 {% for conf in aio.configs.config %}
 
 configure_snapraidaio_{{ conf.uuid }}_conf:
@@ -34,14 +32,3 @@ configure_snapraidaio_{{ conf.uuid }}_conf:
     - mode: '0640'
 
 {% endfor %}
-
-{% else %}
-
-remove_snapraidaio_conf_files:
-  module.run:
-    - file.find:
-      - path: "/etc"
-      - iname: "snapraid-aio-*.conf"
-      - delete: "f"
-
-{% endif %}
