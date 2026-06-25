@@ -13,7 +13,13 @@
         "config": {
           "type": "array",
           "items": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "type": "string",
+                "format": "uuidv4"
+              }
+            }
           }
         }
       }

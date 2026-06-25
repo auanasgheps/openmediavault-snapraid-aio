@@ -15,9 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-{% set aio = salt['omv_conf.get']('conf.service.snapraidaio') %}
+{% set configs = salt['omv_conf.get_by_filter'](
+    'conf.service.snapraidaio.config',
+    {'operator': 'stringEnum', 'arg0': 'uuid', 'arg1': []}) %}
 
-{% for conf in aio.configs.config %}
+{% for conf in configs %}
 
 configure_snapraidaio_{{ conf.uuid }}_conf:
   file.managed:
