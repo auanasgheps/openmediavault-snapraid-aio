@@ -16,6 +16,10 @@
       "type": "string",
       "format": "uuidv4"
     },
+    "cron_uuid": {
+      "type": "string",
+      "default": ""
+    },
     "snapraid_conf": {
       "type": "string",
       "default": "/etc/snapraid.conf"

@@ -76,14 +76,16 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $params["services"] = "";
         }
         $this->validateMethodParams($params, "rpc.snapraidaio.setconfig");
-        // Prepare the configuration object.
-        $object = new \OMV\Config\ConfigObject("conf.service.snapraidaio.config");
         $db = \OMV\Config\Database::getInstance();
+        // Load existing object to preserve fields not sent by the form (e.g. cron_uuid).
+        $isNew = ($params["uuid"] === \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID"));
+        if ($isNew) {
+            $object = new \OMV\Config\ConfigObject("conf.service.snapraidaio.config");
+        } else {
+            $object = $db->get("conf.service.snapraidaio.config", $params["uuid"]);
+        }
         $object->setAssoc($params);
-        // Set the configuration object.
-        $isNew = $object->isNew();
-        $db = \OMV\Config\Database::getInstance();
-        if (TRUE === $isNew) {
+        if ($isNew) {
             // Check uniqueness - config file
             $db->assertIsUnique($object, "snapraid_conf");
         }
@@ -101,9 +103,20 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         // Delete the configuration object.
         $db = \OMV\Config\Database::getInstance();
         $object = $db->get("conf.service.snapraidaio.config", $params["uuid"]);
+        $assoc = $object->getAssoc();
         $db->delete($object);
+        // Remove the generated AIO conf file if it exists.
+        $confFile = sprintf("/etc/snapraid-aio-%s.conf", $params["uuid"]);
+        if (file_exists($confFile)) {
+            unlink($confFile);
+        }
+        // Remove the linked cron entry if one was saved.
+        if (!empty($assoc["cron_uuid"])) {
+            \OMV\Rpc\Rpc::call("Cron", "delete",
+                ["uuid" => $assoc["cron_uuid"]], $context);
+        }
         // Return the deleted configuration object.
-        return $object->getAssoc();
+        return $assoc;
     }
 
     public function enumerateConfigFiles($params, $context)
@@ -181,23 +194,49 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, "rpc.common.objectuuid");
-        // Proxy to the Cron RPC, keyed by the config UUID.
+        // Look up the stored cron entry UUID for this config.
+        $db = \OMV\Config\Database::getInstance();
+        $config = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
+        $cronUuid = $config["cron_uuid"];
+        // If no cron entry has been created yet, return a default object.
+        if (empty($cronUuid)) {
+            return \OMV\Rpc\Rpc::call("Cron", "get",
+                ["uuid" => \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID")], $context);
+        }
         return \OMV\Rpc\Rpc::call("Cron", "get",
-            ["uuid" => $params["uuid"]], $context);
+            ["uuid" => $cronUuid], $context);
     }
 
     public function setSchedule($params, $context)
     {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
-        // Ensure mandatory fields the Cron RPC expects are present.
-        $params["type"] = "userdefined";
-        $params["username"] = "root";
-        $params["command"] = sprintf(
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, "rpc.common.objectuuid");
+        // Look up the config to retrieve the stored cron entry UUID.
+        $db = \OMV\Config\Database::getInstance();
+        $configObject = $db->get("conf.service.snapraidaio.config", $params["uuid"]);
+        $configData = $configObject->getAssoc();
+        $cronUuid = $configData["cron_uuid"];
+        // Build the Cron RPC params.
+        $cronParams = $params;
+        // Use the stored cron UUID if one exists, otherwise use the new-entry sentinel.
+        $cronParams["uuid"] = !empty($cronUuid)
+            ? $cronUuid
+            : \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
+        $cronParams["type"] = "userdefined";
+        $cronParams["username"] = "root";
+        $cronParams["command"] = sprintf(
             "/usr/sbin/snapraid-aio-script.sh -c /etc/snapraid-aio-%s.conf",
             $params["uuid"]
         );
-        // Proxy to the Cron RPC.
-        return \OMV\Rpc\Rpc::call("Cron", "set", $params, $context);
+        // Save the cron entry and retrieve its UUID (new on first save).
+        $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
+        // Persist the cron entry UUID back to the config if this was a first save.
+        if (empty($cronUuid)) {
+            $configObject->set("cron_uuid", $cronResult["uuid"]);
+            $db->set($configObject);
+        }
+        return $cronResult;
     }
 }

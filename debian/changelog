@@ -15,10 +15,15 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     apprise, apprise_email, execute_before_spindown, smart_log_notify
   * Fix confdb create script missing executable bit in git
   * Replace global enable toggle with per-config Schedule button on the
-    datatable; each config gets its own cron entry via OMV's Cron RPC,
-    keyed by the config UUID (getSchedule/setSchedule proxy methods)
+    datatable; each config gets its own cron entry via OMV's Cron RPC;
+    cron_uuid stored per-config so the schedule round-trips correctly
   * Remove Settings page, Settings navigation entry, and global enable field
-  * Remove enable if/else from Salt template; configs are always rendered
+  * Fix scheduling: cron_uuid field added to per-config datamodel; getSchedule
+    uses stored cron_uuid (blank form for new), setSchedule uses new-entry
+    sentinel on first save and persists returned UUID back to config
+  * Fix setSchedule missing validateMethodParams (uuid not validated before use)
+  * Fix setConfig to load existing object before setAssoc to preserve cron_uuid
+  * Fix deleteConfig: remove /etc/snapraid-aio-<uuid>.conf and linked cron entry
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 25 Jun 2026 00:00:00 +0000
 
