@@ -24,9 +24,10 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix setSchedule missing validateMethodParams (uuid not validated before use)
   * Fix setConfig to load existing object before setAssoc to preserve cron_uuid
   * Fix deleteConfig: remove /etc/snapraid-aio-<uuid>.conf and linked cron entry
-  * Fix conf.service.snapraidaio.json: drop duplicated per-item field schema;
-    use minimal items stub (uuid only) to satisfy OMV model layer; Salt now
-    queries conf.service.snapraidaio.config directly via omv_conf.get_by_filter
+  * Fix Salt: query conf.service.snapraidaio.config directly via omv_conf.get
+    to avoid parent model field validation; normalise single/list return value
+  * Fix etc-snapraid-aio_conf.j2: replace invalid get_by_filter([]) calls for
+    email config with omv_conf.get on conf.system.notification.email
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 25 Jun 2026 00:00:00 +0000
 

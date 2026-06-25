@@ -8,8 +8,9 @@ CONFIG_VERSION="3.4"
 
 ### NOTIFICATION SETTINGS ###
 
-EMAIL_ADDRESS="{{ salt['omv_conf.get_by_filter']('conf.system.notification.email', [])[0].get('sender', '') if salt['omv_conf.get_by_filter']('conf.system.notification.email', []) else '' }}"
-FROM_EMAIL_ADDRESS="{{ salt['omv_conf.get_by_filter']('conf.system.notification.email', [])[0].get('sender', '') if salt['omv_conf.get_by_filter']('conf.system.notification.email', []) else '' }}"
+{% set _email_cfg = salt['omv_conf.get']('conf.system.notification.email') %}
+EMAIL_ADDRESS="{{ _email_cfg.get('sender', '') if _email_cfg is mapping else '' }}"
+FROM_EMAIL_ADDRESS="{{ _email_cfg.get('sender', '') if _email_cfg is mapping else '' }}"
 
 CHECK_UPDATES=0
 
