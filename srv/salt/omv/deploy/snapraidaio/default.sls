@@ -16,8 +16,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 {% set configs = salt['omv_conf.get_by_filter'](
-    'conf.service.snapraidaio.config',
-    {'operator': 'stringEnum', 'arg0': 'uuid', 'arg1': []}) %}
+    'conf.service.snapraidaio.config', None) %}
 
 {% for conf in configs %}
 
