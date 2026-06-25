@@ -178,6 +178,24 @@
         "services": {
           "type": "string"
         },
+        "docker_remote": {
+          "type": "boolean",
+          "required": true
+        },
+        "docker_user": {
+          "type": "string",
+          "required": true
+        },
+        "docker_host_services": {
+          "type": "string",
+          "required": true
+        },
+        "docker_delay": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600,
+          "required": true
+        },
         "custom_hook": {
           "type": "boolean",
           "required": true
