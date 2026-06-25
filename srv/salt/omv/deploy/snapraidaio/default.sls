@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-{% set configs = salt['omv_conf.get_by_filter'](
-    'conf.service.snapraidaio.config', None) %}
+{% set _raw = salt['omv_conf.get']('conf.service.snapraidaio.config') %}
+{% set configs = _raw if _raw is iterable and _raw is not mapping else ([_raw] if _raw else []) %}
 
 {% for conf in configs %}
 
