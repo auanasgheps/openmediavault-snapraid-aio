@@ -13,6 +13,7 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add descriptive hints to fields that previously had none
   * Fix misleading labels: force_zero, spindown, snap_status_notify,
     apprise, apprise_email, execute_before_spindown, smart_log_notify
+  * Fix confdb create script missing executable bit in git
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 25 Jun 2026 00:00:00 +0000
 
