@@ -311,7 +311,7 @@ data:
         monospaced: true
         rows: 4
         value: ""
-        hint: _("One entry per line: HOST_IP:container1 container2 container3")
+        hint: _("One entry per line: HOST_IP&colon;container1 container2 container3")
         modifiers:
           - type: disabled
             constraint:
