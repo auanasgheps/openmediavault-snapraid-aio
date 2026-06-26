@@ -16,6 +16,8 @@ data:
       - type: hidden
         name: uuid
         value: "{{ _routeParams.uuid }}"
+      - type: hidden
+        name: cron_uuid
       - type: checkbox
         name: enable
         label: _("Enable")

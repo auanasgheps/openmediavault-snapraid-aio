@@ -37,6 +37,10 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     when no cron entry exists yet, and also recover from stale cron_uuid by
     clearing it and falling back to the same default; setSchedule retries
     as a new entry when the stored cron_uuid is stale
+  * Fix setSchedule XPath error on save: getSchedule now returns uuid as
+    the config UUID (not the cron UUID) and carries cron_uuid as a separate
+    field; hidden cron_uuid field added to schedule form so it round-trips
+    back to setSchedule; setSchedule reads cron_uuid from params directly
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 

@@ -199,22 +199,29 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, "rpc.common.objectuuid");
-        // Look up the stored cron entry UUID for this config.
+        $configUuid = $params["uuid"];
         $db = \OMV\Config\Database::getInstance();
-        $configObject = $db->get("conf.service.snapraidaio.config", $params["uuid"]);
+        $configObject = $db->get("conf.service.snapraidaio.config", $configUuid);
         $cronUuid = $configObject->get("cron_uuid");
         if (!empty($cronUuid)) {
             try {
-                return \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $cronUuid], $context);
+                $cron = \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $cronUuid], $context);
+                // Replace the cron UUID with the config UUID so the form POSTs back
+                // to the right config, and carry the cron UUID separately.
+                $cron["uuid"]     = $configUuid;
+                $cron["cron_uuid"] = $cronUuid;
+                return $cron;
             } catch (\Exception $e) {
                 // Cron entry no longer exists; clear stale UUID and fall through.
                 $configObject->set("cron_uuid", "");
                 $db->set($configObject);
             }
         }
-        // No cron entry exists yet; return defaults matching the form fields.
+        // No cron entry yet; return defaults. uuid = config UUID so the form
+        // POSTs back correctly; cron_uuid is empty to signal first-time save.
         return [
-            "uuid"       => \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID"),
+            "uuid"       => $configUuid,
+            "cron_uuid"  => "",
             "enable"     => true,
             "execution"  => "monthly",
             "minute"     => "0",
@@ -233,22 +240,21 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, "rpc.common.objectuuid");
-        // Look up the config to retrieve the stored cron entry UUID.
+        $configUuid = $params["uuid"];
+        // cron_uuid is passed back from the form (set by getSchedule).
+        $cronUuid = isset($params["cron_uuid"]) ? $params["cron_uuid"] : "";
         $db = \OMV\Config\Database::getInstance();
-        $configObject = $db->get("conf.service.snapraidaio.config", $params["uuid"]);
-        $configData = $configObject->getAssoc();
-        $cronUuid = $configData["cron_uuid"];
+        $configObject = $db->get("conf.service.snapraidaio.config", $configUuid);
         // Build the Cron RPC params.
         $cronParams = $params;
-        // Use the stored cron UUID if one exists, otherwise use the new-entry sentinel.
         $cronParams["uuid"] = !empty($cronUuid)
             ? $cronUuid
             : \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
-        $cronParams["type"] = "userdefined";
+        $cronParams["type"]     = "userdefined";
         $cronParams["username"] = "root";
-        $cronParams["command"] = sprintf(
+        $cronParams["command"]  = sprintf(
             "/usr/sbin/snapraid-aio-script.sh -c /etc/snapraid-aio-%s.conf",
-            $params["uuid"]
+            $configUuid
         );
         // Save the cron entry and retrieve its UUID (new on first save).
         try {
@@ -262,7 +268,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $cronParams["uuid"] = \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
             $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
         }
-        // Persist the cron entry UUID back to the config if this was a first save.
+        // Persist the cron entry UUID back to the config on first save.
         if (empty($cronUuid)) {
             $configObject->set("cron_uuid", $cronResult["uuid"]);
             $db->set($configObject);
