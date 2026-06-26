@@ -129,27 +129,28 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
         $dir = "/etc/snapraid";
-        // check if /etc/snapraid exists
         if (!is_dir($dir)) {
             throw new \OMV\Exception(gettext("/etc/snapraid does not exist!"));
         }
-        // get all snapraid config files
+        // Enumerate symlinks only: each symlink name is the array label, and the
+        // resolved real path (UUID-based) is the stable value stored in the config.
         $files = [];
-        $files[] = [
-            "path" => "/etc/snapraid.conf"
-        ];
         $it = new DirectoryIterator($dir);
         foreach ($it as $entry) {
             if ($entry->isDot()) continue;
-            if (!$entry->isFile()) continue;
-            if ($entry->isLink()) continue;
+            if (!$entry->isLink()) continue;
             $path = $entry->getPathname();
             if (!preg_match("/\.conf$/i", $path)) continue;
+            $real = realpath($path);
+            if ($real === false) continue;
+            $label = basename($path, ".conf");
             $files[] = [
-                "path" => $path
+                "path"  => $real,
+                "label" => $label,
             ];
         }
-        return ($files);
+        usort($files, fn($a, $b) => strcasecmp($a["label"], $b["label"]));
+        return $files;
     }
 
     public function getContainers($params, $context)

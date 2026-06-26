@@ -16,10 +16,10 @@ data:
       - type: confObjUuid
       - type: select
         name: snapraid_conf
-        label: _("SnapRAID config file")
-        value: "/etc/snapraid.conf"
+        label: _("SnapRAID array")
+        value: ""
         valueField: path
-        textField: path
+        textField: label
         store:
           proxy:
             service: SnapRaidAio

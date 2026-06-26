@@ -8,6 +8,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add Docker remote management fields to datamodel: docker_remote,
     docker_user, docker_host_services, docker_delay
   * Fix APPRISE_URL rendered as Bash array in generated config file
+  * Improve SnapRAID array selector: show array name (label) instead of raw
+    config file path; resolve symlinks to stable UUID-based paths as stored
+    value; hide the /etc/snapraid.conf legacy symlink
   * Disable Telegram and Discord integrations (superseded by Apprise)
   * Hardcode CHECK_UPDATES=0; updates ship with the package
   * Wire EMAIL_ADDRESS/FROM_EMAIL_ADDRESS from OMV system email config
