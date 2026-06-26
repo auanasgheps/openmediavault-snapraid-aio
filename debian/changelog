@@ -32,9 +32,11 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     to avoid parent model field validation; normalise single/list return value
   * Fix etc-snapraid-aio_conf.j2: replace invalid get_by_filter([]) calls for
     email config with omv_conf.get on conf.system.notification.email
-  * Fix getSchedule crashing with XPath error when the linked cron job no
-    longer exists: clear stale cron_uuid and fall back to a blank new-entry
-    form; setSchedule similarly retries as a new entry on the same failure
+  * Fix getSchedule crashing with XPath error: Cron::get does not accept
+    the new-entry sentinel UUID; return a hardcoded default object directly
+    when no cron entry exists yet, and also recover from stale cron_uuid by
+    clearing it and falling back to the same default; setSchedule retries
+    as a new entry when the stored cron_uuid is stale
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 

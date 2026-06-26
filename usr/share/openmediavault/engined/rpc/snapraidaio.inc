@@ -212,9 +212,19 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                 $db->set($configObject);
             }
         }
-        // No cron entry exists yet; return a default new-entry object.
-        return \OMV\Rpc\Rpc::call("Cron", "get",
-            ["uuid" => \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID")], $context);
+        // No cron entry exists yet; return defaults matching the form fields.
+        return [
+            "uuid"       => \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID"),
+            "enable"     => true,
+            "execution"  => "monthly",
+            "minute"     => "0",
+            "hour"       => "0",
+            "dayofmonth" => "*",
+            "month"      => "*",
+            "dayofweek"  => "*",
+            "sendemail"  => false,
+            "comment"    => "",
+        ];
     }
 
     public function setSchedule($params, $context)
