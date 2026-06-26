@@ -263,6 +263,10 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             "/usr/sbin/snapraid-aio-script.sh -c /etc/snapraid-aio-%s.conf",
             $configUuid
         );
+        // Required by the Cron schema; we always use fixed values, not "every N".
+        $cronParams["everynminute"]     = false;
+        $cronParams["everynhour"]       = false;
+        $cronParams["everyndayofmonth"] = false;
         // Cron::set expects time fields as arrays for 'exactly' execution.
         foreach (["minute", "hour", "dayofmonth", "month", "dayofweek"] as $field) {
             if (isset($cronParams[$field]) && !is_array($cronParams[$field])) {

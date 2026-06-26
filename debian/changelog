@@ -48,6 +48,8 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix setSchedule: wrap time fields as single-element arrays before
     passing to Cron::set (required for 'exactly' execution type);
     flatten arrays back to scalars in getSchedule for the form selects
+  * Fix setSchedule: add required everynminute/everynhour/everyndayofmonth
+    boolean fields (always false) to satisfy Cron RPC schema validation
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 
