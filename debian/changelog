@@ -14,10 +14,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix Salt deploy exit code 1 when all AIO configs are deleted (add noop state)
   * Pre-fill schedule comment with "SnapRAID AIO <array name>" on first-time creation
   * Add Array name column to config list table
-  * Fix email sender/receiver not populated when creating a new config
   * Add Scheduled column to config list table
-  * Fix email sender/receiver not populated on new config form: add getEmailSettings
-    RPC and load fields via their own store proxy instead of the form GET
+  * Fix email sender/receiver not populated on create form: set editing: true and
+    sentinel UUID on create route so getConfig fires; remove getEmailSettings RPC
   * Disable Telegram and Discord integrations (superseded by Apprise)
   * Hardcode CHECK_UPDATES=0; updates ship with the package
   * Wire EMAIL_ADDRESS/FROM_EMAIL_ADDRESS from OMV system email config
