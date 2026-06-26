@@ -25,7 +25,7 @@ data:
       - type: select
         name: execution
         label: _("Time of execution")
-        value: "monthly"
+        value: "userdefined"
         store:
           data:
             - ["hourly", _("Hourly")]
