@@ -22,8 +22,7 @@ data:
         sortable: true
       - name: _("Scheduled")
         prop: scheduled
-        flexGrow: 0
-        width: 250
+        flexGrow: 1
         sortable: true
         cellTemplateName: checkIcon
       - name: _("Config File")
