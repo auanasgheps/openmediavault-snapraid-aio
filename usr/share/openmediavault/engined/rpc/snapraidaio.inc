@@ -62,10 +62,17 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
         // Validate the parameters of the RPC service method.
         $this->validateMethodParams($params, "rpc.common.objectuuid");
-        // Get the configuration object.
         $db = \OMV\Config\Database::getInstance();
-        $result = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
-        $result["services"] = strlen($result["services"]) ? explode(",", $result["services"]) : [];
+        $isNew = ($params["uuid"] === \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID"));
+        if ($isNew) {
+            // Return datamodel defaults for a new object.
+            $object = new \OMV\Config\ConfigObject("conf.service.snapraidaio.config");
+            $result = $object->getAssoc();
+            $result["services"] = [];
+        } else {
+            $result = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
+            $result["services"] = strlen($result["services"]) ? explode(",", $result["services"]) : [];
+        }
         $emailCfg = $db->getAssoc("conf.system.notification.email");
         $result["email_sender"]   = $emailCfg["sender"]       ?? "";
         $result["email_receiver"] = $emailCfg["primaryemail"] ?? "";
