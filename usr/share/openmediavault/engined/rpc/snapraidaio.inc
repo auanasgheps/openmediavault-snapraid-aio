@@ -49,6 +49,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $objects = $db->getAssoc("conf.service.snapraidaio.config");
         foreach ($objects as &$obj) {
             $obj["array_name"] = $this->getArrayLabel($obj["snapraid_conf"]);
+            $obj["scheduled"]  = !empty($obj["cron_uuid"]);
         }
         unset($obj);
         // Filter the result.

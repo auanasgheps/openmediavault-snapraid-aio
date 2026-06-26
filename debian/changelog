@@ -15,6 +15,7 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Pre-fill schedule comment with "SnapRAID AIO <array name>" on first-time creation
   * Add Array name column to config list table
   * Fix email sender/receiver not populated when creating a new config
+  * Add Scheduled column to config list table
   * Disable Telegram and Discord integrations (superseded by Apprise)
   * Hardcode CHECK_UPDATES=0; updates ship with the package
   * Wire EMAIL_ADDRESS/FROM_EMAIL_ADDRESS from OMV system email config
