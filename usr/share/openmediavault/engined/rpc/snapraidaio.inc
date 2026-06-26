@@ -252,8 +252,9 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $cronUuid = isset($params["cron_uuid"]) ? $params["cron_uuid"] : "";
         $db = \OMV\Config\Database::getInstance();
         $configObject = $db->get("conf.service.snapraidaio.config", $configUuid);
-        // Build the Cron RPC params.
+        // Build the Cron RPC params. Strip fields unknown to the Cron schema.
         $cronParams = $params;
+        unset($cronParams["cron_uuid"]);
         $cronParams["uuid"] = !empty($cronUuid)
             ? $cronUuid
             : \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
