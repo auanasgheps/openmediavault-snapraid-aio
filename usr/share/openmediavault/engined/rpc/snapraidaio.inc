@@ -201,15 +201,20 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodParams($params, "rpc.common.objectuuid");
         // Look up the stored cron entry UUID for this config.
         $db = \OMV\Config\Database::getInstance();
-        $config = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
-        $cronUuid = $config["cron_uuid"];
-        // If no cron entry has been created yet, return a default object.
-        if (empty($cronUuid)) {
-            return \OMV\Rpc\Rpc::call("Cron", "get",
-                ["uuid" => \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID")], $context);
+        $configObject = $db->get("conf.service.snapraidaio.config", $params["uuid"]);
+        $cronUuid = $configObject->get("cron_uuid");
+        if (!empty($cronUuid)) {
+            try {
+                return \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $cronUuid], $context);
+            } catch (\Exception $e) {
+                // Cron entry no longer exists; clear stale UUID and fall through.
+                $configObject->set("cron_uuid", "");
+                $db->set($configObject);
+            }
         }
+        // No cron entry exists yet; return a default new-entry object.
         return \OMV\Rpc\Rpc::call("Cron", "get",
-            ["uuid" => $cronUuid], $context);
+            ["uuid" => \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID")], $context);
     }
 
     public function setSchedule($params, $context)
@@ -236,7 +241,17 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $params["uuid"]
         );
         // Save the cron entry and retrieve its UUID (new on first save).
-        $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
+        try {
+            $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
+        } catch (\Exception $e) {
+            if (empty($cronUuid)) {
+                throw $e;
+            }
+            // Stale UUID — the cron entry no longer exists; create a new one instead.
+            $cronUuid = "";
+            $cronParams["uuid"] = \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
+            $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
+        }
         // Persist the cron entry UUID back to the config if this was a first save.
         if (empty($cronUuid)) {
             $configObject->set("cron_uuid", $cronResult["uuid"]);

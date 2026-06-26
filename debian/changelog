@@ -32,8 +32,11 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     to avoid parent model field validation; normalise single/list return value
   * Fix etc-snapraid-aio_conf.j2: replace invalid get_by_filter([]) calls for
     email config with omv_conf.get on conf.system.notification.email
+  * Fix getSchedule crashing with XPath error when the linked cron job no
+    longer exists: clear stale cron_uuid and fall back to a blank new-entry
+    form; setSchedule similarly retries as a new entry on the same failure
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 25 Jun 2026 00:00:00 +0000
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 
 openmediavault-snapraid-aio (8.0) stable; urgency=low
 
