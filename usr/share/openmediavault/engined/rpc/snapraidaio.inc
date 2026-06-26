@@ -33,6 +33,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->registerMethod("setConfig");
         $this->registerMethod("deleteConfig");
         $this->registerMethod("enumerateConfigFiles");
+        $this->registerMethod("getEmailSettings");
         $this->registerMethod("getContainers");
         $this->registerMethod("getSchedule");
         $this->registerMethod("setSchedule");
@@ -163,6 +164,17 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         }
         usort($files, fn($a, $b) => strcasecmp($a["label"], $b["label"]));
         return $files;
+    }
+
+    public function getEmailSettings($params, $context)
+    {
+        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
+        $db = \OMV\Config\Database::getInstance();
+        $emailCfg = $db->getAssoc("conf.system.notification.email");
+        return [
+            "email_sender"   => $emailCfg["sender"]       ?? "",
+            "email_receiver" => $emailCfg["primaryemail"] ?? "",
+        ];
     }
 
     public function getContainers($params, $context)

@@ -37,6 +37,12 @@ data:
         label: _("Sender address")
         value: ""
         readonly: true
+        store:
+          proxy:
+            service: SnapRaidAio
+            get:
+              method: getEmailSettings
+        valueField: email_sender
         modifiers:
           - type: hidden
             constraint:
@@ -48,6 +54,12 @@ data:
         label: _("Receiver address")
         value: ""
         readonly: true
+        store:
+          proxy:
+            service: SnapRaidAio
+            get:
+              method: getEmailSettings
+        valueField: email_receiver
         modifiers:
           - type: hidden
             constraint:

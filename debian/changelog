@@ -16,6 +16,8 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add Array name column to config list table
   * Fix email sender/receiver not populated when creating a new config
   * Add Scheduled column to config list table
+  * Fix email sender/receiver not populated on new config form: add getEmailSettings
+    RPC and load fields via their own store proxy instead of the form GET
   * Disable Telegram and Discord integrations (superseded by Apprise)
   * Hardcode CHECK_UPDATES=0; updates ship with the package
   * Wire EMAIL_ADDRESS/FROM_EMAIL_ADDRESS from OMV system email config
