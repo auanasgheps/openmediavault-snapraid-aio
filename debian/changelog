@@ -17,8 +17,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add Scheduled column to config list table
   * Fix email sender/receiver not populated on create form: set editing: true and
     sentinel UUID on create route so getConfig fires; remove getEmailSettings RPC
-  * Fix create config 400 error: getConfig now returns sentinel UUID in result so
-    the form POSTs back a valid UUIDv4 instead of an empty string
+  * Fix create config 400 error: embed sentinel UUID in create route URL as path
+    segment (same pattern as edit/:uuid) so _routeParams.uuid is populated;
+    normalize empty uuid to sentinel in setConfig before schema validation
   * Disable Telegram and Discord integrations (superseded by Apprise)
   * Hardcode CHECK_UPDATES=0; updates ship with the package
   * Wire EMAIL_ADDRESS/FROM_EMAIL_ADDRESS from OMV system email config

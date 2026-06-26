@@ -86,6 +86,11 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
     {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
+        // Normalize empty uuid (sent by confObjUuid in edit mode for new objects)
+        // to the sentinel so validateMethodParams and isNew checks work correctly.
+        if (empty($params["uuid"])) {
+            $params["uuid"] = \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
+        }
         // Validate the parameters of the RPC service method.
         if (isset($params["services"]) && $params["services"] !== null && $params["services"] !== "null") {
             $params["services"] = implode(",", $params["services"]);

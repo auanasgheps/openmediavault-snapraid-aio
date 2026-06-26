@@ -34,7 +34,7 @@ data:
       - template: create
         execute:
           type: url
-          url: "/services/snapraidaio/configs/create"
+          url: "/services/snapraidaio/configs/create/fa4b1c66-ef79-11e5-87a0-0002b3a176b4"
       - template: edit
         execute:
           type: url
