@@ -223,7 +223,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             "uuid"       => $configUuid,
             "cron_uuid"  => "",
             "enable"     => true,
-            "execution"  => "userdefined",
+            "execution"  => "exactly",
             "minute"     => "0",
             "hour"       => "0",
             "dayofmonth" => "*",

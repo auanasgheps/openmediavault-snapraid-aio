@@ -25,7 +25,7 @@ data:
       - type: select
         name: execution
         label: _("Time of execution")
-        value: "userdefined"
+        value: "exactly"
         store:
           data:
             - ["hourly", _("Hourly")]
@@ -34,7 +34,7 @@ data:
             - ["monthly", _("Monthly")]
             - ["yearly", _("Yearly")]
             - ["reboot", _("At reboot")]
-            - ["userdefined", _("Custom schedule")]
+            - ["exactly", _("Custom schedule")]
       - type: container
         fields:
           - type: select
@@ -116,7 +116,7 @@ data:
                   arg0:
                     prop: execution
                   arg1:
-                    value: "userdefined"
+                    value: "exactly"
           - type: select
             name: hour
             label: _("Hour")
@@ -158,7 +158,7 @@ data:
                   arg0:
                     prop: execution
                   arg1:
-                    value: "userdefined"
+                    value: "exactly"
       - type: container
         fields:
           - type: select
@@ -206,7 +206,7 @@ data:
                   arg0:
                     prop: execution
                   arg1:
-                    value: "userdefined"
+                    value: "exactly"
           - type: select
             name: month
             label: _("Month")
@@ -233,7 +233,7 @@ data:
                   arg0:
                     prop: execution
                   arg1:
-                    value: "userdefined"
+                    value: "exactly"
           - type: select
             name: dayofweek
             label: _("Day of week")
@@ -255,7 +255,7 @@ data:
                   arg0:
                     prop: execution
                   arg1:
-                    value: "userdefined"
+                    value: "exactly"
       - type: checkbox
         name: sendemail
         label: _("Send email on completion")

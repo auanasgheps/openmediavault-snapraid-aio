@@ -43,6 +43,8 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     back to setSchedule; setSchedule reads cron_uuid from params directly
   * Change default schedule to custom (userdefined) at midnight daily so
     users can adjust the time immediately without switching execution type
+  * Fix schedule form: replace invalid 'userdefined' execution value with
+    'exactly' (the correct value accepted by the Cron RPC)
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 
