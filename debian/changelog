@@ -62,7 +62,8 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     flatten arrays back to scalars in getSchedule for the form selects
   * Fix setSchedule: add required everynminute/everynhour/everyndayofmonth
     boolean fields (always false) to satisfy Cron RPC schema validation
-  * Fix setSchedule: unset cron_uuid from cronParams before Cron::set;
+  * Fix schedule Save button disabled when form loads pre-filled: set disabled: false
+    on submit button to bypass dirty-state gate on the schedule form
     it is not a field in conf.system.cron.job and causes a 500 error
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000

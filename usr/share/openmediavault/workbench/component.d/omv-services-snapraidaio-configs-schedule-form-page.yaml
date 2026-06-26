@@ -266,7 +266,11 @@ data:
         value: ""
     buttons:
       - template: submit
+        disabled: false
       - template: cancel
+        execute:
+          type: url
+          url: "/services/snapraidaio/configs"
         execute:
           type: url
           url: "/services/snapraidaio/configs"
