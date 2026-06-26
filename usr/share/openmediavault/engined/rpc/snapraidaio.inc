@@ -69,6 +69,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             // Return datamodel defaults for a new object.
             $object = new \OMV\Config\ConfigObject("conf.service.snapraidaio.config");
             $result = $object->getAssoc();
+            // Ensure the sentinel UUID is returned so the form can POST it back.
+            $result["uuid"]     = $params["uuid"];
             $result["services"] = [];
         } else {
             $result = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
