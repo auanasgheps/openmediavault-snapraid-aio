@@ -8,9 +8,14 @@ CONFIG_VERSION="3.4"
 
 ### NOTIFICATION SETTINGS ###
 
+{% if config.email_notifications | default(False) | to_bool %}
 {% set _email_cfg = salt['omv_conf.get']('conf.system.notification.email') %}
-EMAIL_ADDRESS="{{ _email_cfg.get('sender', '') if _email_cfg is mapping else '' }}"
+EMAIL_ADDRESS="{{ _email_cfg.get('primaryemail', '') if _email_cfg is mapping else '' }}"
 FROM_EMAIL_ADDRESS="{{ _email_cfg.get('sender', '') if _email_cfg is mapping else '' }}"
+{% else %}
+EMAIL_ADDRESS=""
+FROM_EMAIL_ADDRESS=""
+{% endif %}
 
 CHECK_UPDATES=0
 

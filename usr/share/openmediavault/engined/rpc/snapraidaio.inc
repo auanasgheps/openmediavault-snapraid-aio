@@ -62,6 +62,9 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $db = \OMV\Config\Database::getInstance();
         $result = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
         $result["services"] = strlen($result["services"]) ? explode(",", $result["services"]) : [];
+        $emailCfg = $db->getAssoc("conf.system.notification.email");
+        $result["email_sender"]   = $emailCfg["sender"]       ?? "";
+        $result["email_receiver"] = $emailCfg["primaryemail"] ?? "";
         return $result;
     }
 
@@ -75,6 +78,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         } else {
             $params["services"] = "";
         }
+        unset($params["email_sender"]);
+        unset($params["email_receiver"]);
         $this->validateMethodParams($params, "rpc.snapraidaio.setconfig");
         $db = \OMV\Config\Database::getInstance();
         // Load existing object to preserve fields not sent by the form (e.g. cron_uuid).

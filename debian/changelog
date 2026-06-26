@@ -1,6 +1,10 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
   * Update bundled snapraid-aio-script to v3.4 stable release
+  * Add email_notifications toggle: enable/disable native OMV email per config;
+    sender and receiver are pulled read-only from OMV system notification
+    settings and hidden in the form when the feature is off
+  * Fix EMAIL_ADDRESS using sender instead of primaryemail from OMV email config
   * Add Docker remote management fields to datamodel: docker_remote,
     docker_user, docker_host_services, docker_delay
   * Fix APPRISE_URL rendered as Bash array in generated config file

@@ -24,6 +24,10 @@
       "type": "string",
       "default": "/etc/snapraid.conf"
     },
+    "email_notifications": {
+      "type": "boolean",
+      "default": false
+    },
     "healthchecks": {
       "type": "boolean",
       "default": false

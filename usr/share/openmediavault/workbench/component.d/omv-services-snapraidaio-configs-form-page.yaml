@@ -25,6 +25,36 @@ data:
             service: SnapRaidAio
             get:
               method: enumerateConfigFiles
+
+      - type: divider
+        title: _("Email Notifications")
+      - type: checkbox
+        name: email_notifications
+        label: _("Enable email notifications")
+        value: false
+      - type: textInput
+        name: email_sender
+        label: _("Sender address")
+        value: ""
+        readonly: true
+        modifiers:
+          - type: hidden
+            constraint:
+              operator: falsy
+              arg0:
+                prop: email_notifications
+      - type: textInput
+        name: email_receiver
+        label: _("Receiver address")
+        value: ""
+        readonly: true
+        modifiers:
+          - type: hidden
+            constraint:
+              operator: falsy
+              arg0:
+                prop: email_notifications
+
       - type: divider
         title: _("Healthchecks")
       - type: container
