@@ -18,6 +18,10 @@
 {% set _raw = salt['omv_conf.get']('conf.service.snapraidaio.config') %}
 {% set configs = _raw if _raw is iterable and _raw is not mapping else ([_raw] if _raw else []) %}
 
+# Ensure at least one state runs so Salt exits 0 when the config list is empty.
+snapraidaio_noop:
+  test.noop: []
+
 {% for conf in configs %}
 
 configure_snapraidaio_{{ conf.uuid }}_conf:
