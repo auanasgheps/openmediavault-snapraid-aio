@@ -208,8 +208,15 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                 $cron = \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $cronUuid], $context);
                 // Replace the cron UUID with the config UUID so the form POSTs back
                 // to the right config, and carry the cron UUID separately.
-                $cron["uuid"]     = $configUuid;
+                $cron["uuid"]      = $configUuid;
                 $cron["cron_uuid"] = $cronUuid;
+                // Cron::get returns time fields as arrays for 'exactly' execution;
+                // flatten to scalars for the form's single-select fields.
+                foreach (["minute", "hour", "dayofmonth", "month", "dayofweek"] as $field) {
+                    if (isset($cron[$field]) && is_array($cron[$field])) {
+                        $cron[$field] = implode(",", $cron[$field]);
+                    }
+                }
                 return $cron;
             } catch (\Exception $e) {
                 // Cron entry no longer exists; clear stale UUID and fall through.
@@ -256,6 +263,12 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             "/usr/sbin/snapraid-aio-script.sh -c /etc/snapraid-aio-%s.conf",
             $configUuid
         );
+        // Cron::set expects time fields as arrays for 'exactly' execution.
+        foreach (["minute", "hour", "dayofmonth", "month", "dayofweek"] as $field) {
+            if (isset($cronParams[$field]) && !is_array($cronParams[$field])) {
+                $cronParams[$field] = [$cronParams[$field]];
+            }
+        }
         // Save the cron entry and retrieve its UUID (new on first save).
         try {
             $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);

@@ -45,6 +45,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     users can adjust the time immediately without switching execution type
   * Fix schedule form: replace invalid 'userdefined' execution value with
     'exactly' (the correct value accepted by the Cron RPC)
+  * Fix setSchedule: wrap time fields as single-element arrays before
+    passing to Cron::set (required for 'exactly' execution type);
+    flatten arrays back to scalars in getSchedule for the form selects
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 
