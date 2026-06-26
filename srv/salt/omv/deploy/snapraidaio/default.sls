@@ -20,7 +20,8 @@
 
 # Ensure at least one state runs so Salt exits 0 when the config list is empty.
 snapraidaio_noop:
-  test.noop: []
+  cmd.run:
+    - name: /bin/true
 
 {% for conf in configs %}
 
