@@ -9,16 +9,20 @@ data:
     stateId: 07e2a020-e8b9-11f0-997d-525400be629f
     sorters:
       - dir: asc
-        prop: name
+        prop: array_name
     store:
       proxy:
         service: SnapRaidAio
         get:
           method: getConfigList
     columns:
+      - name: _("Array")
+        prop: array_name
+        flexGrow: 1
+        sortable: true
       - name: _("Config File")
         prop: snapraid_conf
-        flexGrow: 1
+        flexGrow: 2
         sortable: true
     actions:
       - template: create

@@ -47,6 +47,10 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         // Get configuration data.
         $db = \OMV\Config\Database::getInstance();
         $objects = $db->getAssoc("conf.service.snapraidaio.config");
+        foreach ($objects as &$obj) {
+            $obj["array_name"] = $this->getArrayLabel($obj["snapraid_conf"]);
+        }
+        unset($obj);
         // Filter the result.
         return $this->applyFilter($objects, $params["start"], $params["limit"],
             $params["sortfield"], $params["sortdir"]);
