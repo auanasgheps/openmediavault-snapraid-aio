@@ -6,7 +6,7 @@ data:
   config:
     autoReload: false
     hasSearchField: true
-    stateId: 07e2a020-e8b9-11f0-997d-525400be629f
+    stateId: 1a3f9d40-5c2e-4b87-a1f6-8e7c0d3a9b52
     sorters:
       - dir: asc
         prop: array_name
