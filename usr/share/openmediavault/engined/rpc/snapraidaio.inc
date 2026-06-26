@@ -194,6 +194,23 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         return ($objects);
     }
 
+    // Reverse-lookup the array label (symlink name) for a given resolved conf path.
+    private function getArrayLabel($confPath)
+    {
+        $dir = "/etc/snapraid";
+        if (!is_dir($dir)) {
+            return "";
+        }
+        $it = new DirectoryIterator($dir);
+        foreach ($it as $entry) {
+            if (!$entry->isLink()) continue;
+            if (realpath($entry->getPathname()) === $confPath) {
+                return basename($entry->getPathname(), ".conf");
+            }
+        }
+        return "";
+    }
+
     public function getSchedule($params, $context)
     {
         // Validate the RPC caller context.
@@ -227,6 +244,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         }
         // No cron entry yet; return defaults. uuid = config UUID so the form
         // POSTs back correctly; cron_uuid is empty to signal first-time save.
+        $label = $this->getArrayLabel($configObject->get("snapraid_conf"));
+        $comment = $label ? sprintf("SnapRAID AIO %s", $label) : "SnapRAID AIO";
         return [
             "uuid"       => $configUuid,
             "cron_uuid"  => "",
@@ -238,7 +257,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             "month"      => "*",
             "dayofweek"  => "*",
             "sendemail"  => false,
-            "comment"    => "",
+            "comment"    => $comment,
         ];
     }
 
