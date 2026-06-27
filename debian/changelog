@@ -29,6 +29,11 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add descriptive hints to fields that previously had none
   * Fix misleading labels: force_zero, spindown, snap_status_notify,
     apprise, apprise_email, execute_before_spindown, smart_log_notify
+  * Improve form labels and hints: add Apprise section description, flag
+    ignore_pattern as advanced, rename snap_status/smart_log labels for
+    consistency, fix Apprise Email field order (enable → url → attach)
+  * Remove Remote Docker management section from UI (advanced feature);
+    hardcode DOCKER_REMOTE=0 in generated config
   * Fix confdb create script missing executable bit in git
   * Replace global enable toggle with per-config Schedule button on the
     datatable; each config gets its own cron entry via OMV's Cron RPC;

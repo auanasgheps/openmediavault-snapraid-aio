@@ -31,6 +31,7 @@ data:
       - type: checkbox
         name: email_notifications
         label: _("Enable email notifications")
+        hint: _("Sends the report via the email address configured in OMV's notification settings.")
         value: false
       - type: textInput
         name: email_sender
@@ -61,13 +62,14 @@ data:
         fields:
           - type: checkbox
             name: healthchecks
-            label: _("Use Healthchecks.io")
+            label: _("Enable Healthchecks.io")
+            hint: _("Reports script errors to Healthchecks.io. Any warning will be reported as a failure.")
             value: false
           - type: textInput
             name: healthchecks_id
             label: _("Healthchecks UUID")
             value: ""
-            hint: _("Only UUID, not full URL.")
+            hint: _("Enter the UUID only, not the full URL.")
             modifiers:
               - type: disabled
                 constraint:
@@ -78,6 +80,7 @@ data:
             name: healthchecks_url
             label: _("Healthchecks URL")
             value: "https://hc-ping.com/"
+            hint: _("Only change if using a self-hosted Healthchecks.io instance. Must include the trailing slash.")
             modifiers:
               - type: disabled
                 constraint:
@@ -92,11 +95,13 @@ data:
           - type: checkbox
             name: apprise
             label: _("Enable Apprise")
+            hint: _("Apprise can send notifications to Telegram, Discord, Slack, Gotify, and many other services. Unlike native email, Apprise can attach the full report when a warning is issued.")
             value: false
           - type: textInput
             name: apprise_url
             label: _("Apprise URL")
             value: ""
+            hint: _("Notification service URL. Multiple URLs can be separated by spaces. See the Apprise documentation for format examples.")
             modifiers:
               - type: disabled
                 constraint:
@@ -105,7 +110,8 @@ data:
                     prop: apprise
           - type: checkbox
             name: apprise_attach
-            label: _("Attach report")
+            label: _("Attach report on warnings")
+            hint: _("Attach the full report to the notification when a warning is issued. Not all services support attachments.")
             value: false
             modifiers:
               - type: disabled
@@ -121,21 +127,24 @@ data:
           - type: checkbox
             name: apprise_email
             label: _("Enable Apprise email")
+            hint: _("Uses Apprise to send email. Does not require the Apprise feature above. Configure using an Apprise email URL for SMTP or a public mail provider.")
             value: false
-          - type: checkbox
-            name: apprise_email_attach
-            label: _("Attach report")
-            value: false
+          - type: textInput
+            name: apprise_email_url
+            label: _("Apprise Email URL")
+            value: ""
+            hint: _("Apprise email service URL. See the Apprise email documentation for SMTP and provider format examples.")
             modifiers:
               - type: disabled
                 constraint:
                   operator: falsy
                   arg0:
                     prop: apprise_email
-          - type: textInput
-            name: apprise_email_url
-            label: _("Apprise Email URL")
-            value: ""
+          - type: checkbox
+            name: apprise_email_attach
+            label: _("Attach report on warnings")
+            hint: _("Attach the full report to the email when a warning is issued.")
+            value: false
             modifiers:
               - type: disabled
                 constraint:
@@ -149,7 +158,7 @@ data:
         value: ""
         monospaced: true
         rows: 2
-        hint: _("Script or command to call instead of default mail. SUBJECT and BODY are passed as parameters.")
+        hint: _("Legacy option, superseded by Apprise. Script or command called instead of the default email. SUBJECT and BODY are passed as parameters.")
 
       - type: divider
         title: _("Sync thresholds")
@@ -226,7 +235,7 @@ data:
         name: verbosity
         label: _("Verbose output in notification")
         value: false
-        hint: _("Include full SnapRAID output in the notification. May result in large messages.")
+        hint: _("Include full SnapRAID output in the notification. Not recommended — may produce very large messages.")
 
       - type: numberInput
         name: retention_days
@@ -244,11 +253,11 @@ data:
         fields:
           - type: checkbox
             name: smart_log
-            label: _("Log SMART info")
+            label: _("Log SMART data")
             value: true
           - type: checkbox
             name: smart_log_notify
-            label: _("Include SMART log in notification")
+            label: _("Include SMART data in notification")
             value: false
             modifiers:
               - type: disabled
@@ -261,11 +270,11 @@ data:
         fields:
           - type: checkbox
             name: snap_status
-            label: _("Run 'snapraid status'")
+            label: _("Log SnapRAID status")
             value: false
           - type: checkbox
             name: snap_status_notify
-            label: _("Include status report in notification")
+            label: _("Include status in notification")
             value: false
             modifiers:
               - type: disabled
@@ -278,7 +287,7 @@ data:
         name: ignore_pattern
         label: _("Ignore pattern")
         value: ""
-        hint: _("Space-separated glob patterns to exclude from diff counts. Example&colon; *.tmp /var/cache/* */backup/*")
+        hint: _("Advanced. Space-separated glob patterns to exclude from diff counts. Misuse will leave parity out of sync without warning — use SnapRAID's exclude configuration for files that change often. Example&colon; *.tmp /var/cache/* */backup/*")
 
       - type: divider
         title: _("Docker and service management")
@@ -318,36 +327,6 @@ data:
               operator: falsy
               arg0:
                 prop: docker_local
-
-      - type: divider
-        title: _("Remote Docker management")
-      - type: checkbox
-        name: docker_remote
-        label: _("Manage remote Docker containers")
-        value: false
-      - type: textInput
-        name: docker_user
-        label: _("SSH user")
-        value: ""
-        modifiers:
-          - type: disabled
-            constraint:
-              operator: falsy
-              arg0:
-                prop: docker_remote
-      - type: textArea
-        name: docker_host_services
-        label: _("Remote hosts and containers")
-        monospaced: true
-        rows: 4
-        value: ""
-        hint: _("One entry per line&colon; HOST_IP&colon;container1 container2 container3")
-        modifiers:
-          - type: disabled
-            constraint:
-              operator: falsy
-              arg0:
-                prop: docker_remote
       - type: numberInput
         name: docker_delay
         label: _("Service start delay (seconds)")
