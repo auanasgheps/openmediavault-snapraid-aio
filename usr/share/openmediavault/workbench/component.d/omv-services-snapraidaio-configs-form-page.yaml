@@ -14,6 +14,9 @@ data:
         method: setConfig
     fields:
       - type: confObjUuid
+      - type: hint
+        hintType: info
+        text: _("For full documentation and configuration reference, see the <a href='https://github.com/auanasgheps/snapraid-aio-script' target='_blank'>SnapRAID AIO Script project page</a>.")
       - type: select
         name: snapraid_conf
         label: _("SnapRAID array")

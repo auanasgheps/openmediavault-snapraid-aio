@@ -32,6 +32,7 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Improve form labels and hints: add Apprise section description, flag
     ignore_pattern as advanced, rename snap_status/smart_log labels for
     consistency, fix Apprise Email field order (enable → url → attach)
+  * Add info hint at top of config form linking to the AIO Script project page
   * Remove Remote Docker management section from UI (advanced feature);
     hardcode DOCKER_REMOTE=0 in generated config
   * Fix confdb create script missing executable bit in git
