@@ -170,16 +170,13 @@
           "type": "string"
         },
         "docker_remote": {
-          "type": "boolean",
-          "required": true
+          "type": "boolean"
         },
         "docker_user": {
-          "type": "string",
-          "required": true
+          "type": "string"
         },
         "docker_host_services": {
-          "type": "string",
-          "required": true
+          "type": "string"
         },
         "docker_delay": {
           "type": "integer",
