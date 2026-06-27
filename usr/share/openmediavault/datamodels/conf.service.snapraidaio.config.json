@@ -127,7 +127,7 @@
     },
     "snapraid_log_dir": {
       "type": "string",
-      "default": "$HOME"
+      "default": ""
     },
     "smart_log": {
       "type": "boolean",

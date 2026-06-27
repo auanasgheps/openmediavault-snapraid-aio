@@ -167,7 +167,11 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
     {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
-        $labelMap = $this->buildLabelMap();
+        try {
+            $labelMap = $this->buildLabelMap();
+        } catch (\Exception $e) {
+            $labelMap = [];
+        }
         $files = [];
         foreach ($labelMap as $path => $label) {
             $files[] = ["path" => $path, "label" => $label];
@@ -274,9 +278,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                 }
                 return $cron;
             } catch (\Exception $e) {
-                // Cron entry no longer exists; clear stale UUID and fall through.
-                $configObject->set("cron_uuid", "");
-                $db->set($configObject);
+                // Cron entry no longer exists; fall through to defaults without
+                // writing back to the DB to avoid triggering an Apply banner.
             }
         }
         // No cron entry yet; return defaults. uuid = config UUID so the form
@@ -307,12 +310,13 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $configUuid = $params["uuid"];
         // cron_uuid is passed back from the form (set by getSchedule).
         $cronUuid = isset($params["cron_uuid"]) ? $params["cron_uuid"] : "";
+        $isNewCron = empty($cronUuid);
         $db = \OMV\Config\Database::getInstance();
         $configObject = $db->get("conf.service.snapraidaio.config", $configUuid);
         // Build the Cron RPC params. Strip fields unknown to the Cron schema.
         $cronParams = $params;
         unset($cronParams["cron_uuid"]);
-        $cronParams["uuid"] = !empty($cronUuid)
+        $cronParams["uuid"] = !$isNewCron
             ? $cronUuid
             : \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
         $cronParams["type"]     = "userdefined";
@@ -335,16 +339,16 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         try {
             $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
         } catch (\Exception $e) {
-            if (empty($cronUuid)) {
+            if ($isNewCron) {
                 throw $e;
             }
             // Stale UUID — the cron entry no longer exists; create a new one instead.
-            $cronUuid = "";
+            $isNewCron = true;
             $cronParams["uuid"] = \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
             $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
         }
-        // Persist the cron entry UUID back to the config on first save.
-        if (empty($cronUuid)) {
+        // Persist the cron entry UUID back to the config on first save (or recovery).
+        if ($isNewCron) {
             $configObject->set("cron_uuid", $cronResult["uuid"]);
             $db->set($configObject);
         }

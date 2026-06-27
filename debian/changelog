@@ -73,6 +73,18 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix DOCKER_HOST_SERVICES trailing space in Bash array when last lines are blank
   * Fix snapraid_conf datamodel default from legacy /etc/snapraid.conf to empty string
     it is not a field in conf.system.cron.job and causes a 500 error
+  * Fix schedule hour select: remove duplicate entries for hours 20-23 (copy-paste
+    artifact left when removing "every N hours" options)
+  * Fix getSchedule: remove spurious $db->set() on stale cron_uuid detection; now
+    consistent with getConfigList which already avoids DB writes to prevent the
+    Apply Changes banner from firing on a read-only path
+  * Fix enumerateConfigFiles: wrap buildLabelMap() in try/catch so a missing
+    /etc/snapraid directory returns an empty list instead of an RPC error dialog
+  * Fix snapraid_log_dir datamodel default: change from "$HOME" to "" so new
+    configs pre-populate with an empty field, consistent with the hint
+  * Refactor setSchedule: replace $cronUuid side-effect in catch block with an
+    explicit $isNewCron boolean; stale-cron recovery now clearly persists the
+    new cron UUID back to the config
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 
