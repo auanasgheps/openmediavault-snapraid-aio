@@ -54,7 +54,21 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         }
         foreach ($objects as &$obj) {
             $obj["array_name"] = $labelMap[$obj["snapraid_conf"]] ?? "";
-            $obj["scheduled"]  = !empty($obj["cron_uuid"]);
+            if (!empty($obj["cron_uuid"])) {
+                try {
+                    \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $obj["cron_uuid"]], $context);
+                    $obj["scheduled"] = true;
+                } catch (\Exception $e) {
+                    // Cron entry no longer exists; clear the stale UUID.
+                    $dbObj = $db->get("conf.service.snapraidaio.config", $obj["uuid"]);
+                    $dbObj->set("cron_uuid", "");
+                    $db->set($dbObj);
+                    $obj["cron_uuid"]  = "";
+                    $obj["scheduled"]  = false;
+                }
+            } else {
+                $obj["scheduled"] = false;
+            }
         }
         unset($obj);
         // Filter the result.
