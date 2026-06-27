@@ -77,7 +77,7 @@ IGNORE_PATTERN=({% for p in (config.ignore_pattern | default('', true)).split() 
 MANAGE_SERVICES={{ 1 if (config.manage_services | default(False) | to_bool) else 0 }}
 DOCKER_MODE={{ config.docker_mode | default(1) }}
 
-DOCKER_LOCAL={{ 1 if (config.docker_local | default(False) | to_bool) else 0 }}
+DOCKER_LOCAL={{ 1 if (config.manage_services | default(False) | to_bool) else 0 }}
 SERVICES="{{ config.services | default('', true) | replace(",", " ") }}"
 
 DOCKER_REMOTE=0

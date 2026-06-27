@@ -163,8 +163,7 @@
           "required": true
         },
         "docker_local": {
-          "type": "boolean",
-          "required": true
+          "type": "boolean"
         },
         "services": {
           "type": "string"
