@@ -386,4 +386,4 @@ data:
       - template: cancel
         execute:
           type: url
-          url: "/services/snapraidaio"
+          url: "/services/snapraidaio/configs"

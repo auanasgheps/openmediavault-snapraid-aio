@@ -271,6 +271,3 @@ data:
         execute:
           type: url
           url: "/services/snapraidaio/configs"
-        execute:
-          type: url
-          url: "/services/snapraidaio/configs"
