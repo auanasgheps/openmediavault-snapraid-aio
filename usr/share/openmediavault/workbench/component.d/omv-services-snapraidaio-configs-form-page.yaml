@@ -12,7 +12,6 @@ data:
           uuid: "{{ _routeParams.uuid }}"
       post:
         method: setConfig
-        successUrl: "/services/snapraidaio/configs"
     fields:
       - type: confObjUuid
       - type: hint
@@ -386,6 +385,9 @@ data:
         hint: _("Run the after hook before spinning down disks instead of after.")
     buttons:
       - template: submit
+        execute:
+          type: url
+          url: "/services/snapraidaio/configs"
       - template: cancel
         execute:
           type: url

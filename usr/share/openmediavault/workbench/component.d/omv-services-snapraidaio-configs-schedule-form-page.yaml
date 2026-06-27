@@ -12,7 +12,6 @@ data:
           uuid: "{{ _routeParams.uuid }}"
       post:
         method: setSchedule
-        successUrl: "/services/snapraidaio/configs"
     fields:
       - type: hidden
         name: uuid
@@ -268,6 +267,9 @@ data:
     buttons:
       - template: submit
         disabled: false
+        execute:
+          type: url
+          url: "/services/snapraidaio/configs"
       - template: cancel
         execute:
           type: url
