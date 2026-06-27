@@ -1,5 +1,8 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
+  * Fix breadcrumb label: add parent route for /services/snapraidaio with
+    title "SnapRAID AIO" so the breadcrumb shows "SnapRAID AIO" instead of
+    the raw URL segment "Snapraidaio"
   * Update bundled snapraid-aio-script to v3.4 stable release
   * Add email_notifications toggle: enable/disable native OMV email per config;
     sender and receiver are pulled read-only from OMV system notification

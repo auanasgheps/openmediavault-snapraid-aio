@@ -1,0 +1,5 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/snapraidaio"
+  title: _("SnapRAID AIO")
