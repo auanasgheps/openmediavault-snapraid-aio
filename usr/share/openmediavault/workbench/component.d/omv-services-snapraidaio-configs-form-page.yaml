@@ -306,10 +306,22 @@ data:
           data:
             - [1, _("Pause / unpause")]
             - [2, _("Stop / restart")]
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: manage_services
       - type: checkbox
         name: docker_local
         label: _("Manage local Docker containers")
         value: false
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: manage_services
       - type: select
         name: services
         label: _("Local container list")
@@ -327,9 +339,15 @@ data:
         modifiers:
           - type: disabled
             constraint:
-              operator: falsy
+              operator: or
               arg0:
-                prop: docker_local
+                operator: falsy
+                arg0:
+                  prop: manage_services
+              arg1:
+                operator: falsy
+                arg0:
+                  prop: docker_local
       - type: numberInput
         name: docker_delay
         label: _("Service start delay (seconds)")
