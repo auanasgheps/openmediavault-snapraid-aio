@@ -47,8 +47,13 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         // Get configuration data.
         $db = \OMV\Config\Database::getInstance();
         $objects = $db->getAssoc("conf.service.snapraidaio.config");
+        try {
+            $labelMap = $this->buildLabelMap();
+        } catch (\Exception $e) {
+            $labelMap = [];
+        }
         foreach ($objects as &$obj) {
-            $obj["array_name"] = $this->getArrayLabel($obj["snapraid_conf"]);
+            $obj["array_name"] = $labelMap[$obj["snapraid_conf"]] ?? "";
             $obj["scheduled"]  = !empty($obj["cron_uuid"]);
         }
         unset($obj);
@@ -147,26 +152,10 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
     {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
-        $dir = "/etc/snapraid";
-        if (!is_dir($dir)) {
-            throw new \OMV\Exception(gettext("/etc/snapraid does not exist!"));
-        }
-        // Enumerate symlinks only: each symlink name is the array label, and the
-        // resolved real path (UUID-based) is the stable value stored in the config.
+        $labelMap = $this->buildLabelMap();
         $files = [];
-        $it = new DirectoryIterator($dir);
-        foreach ($it as $entry) {
-            if ($entry->isDot()) continue;
-            if (!$entry->isLink()) continue;
-            $path = $entry->getPathname();
-            if (!preg_match("/\.conf$/i", $path)) continue;
-            $real = realpath($path);
-            if ($real === false) continue;
-            $label = basename($path, ".conf");
-            $files[] = [
-                "path"  => $real,
-                "label" => $label,
-            ];
+        foreach ($labelMap as $path => $label) {
+            $files[] = ["path" => $path, "label" => $label];
         }
         usort($files, fn($a, $b) => strcasecmp($a["label"], $b["label"]));
         return $files;
@@ -213,21 +202,35 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         return ($objects);
     }
 
-    // Reverse-lookup the array label (symlink name) for a given resolved conf path.
-    private function getArrayLabel($confPath)
+    // Build a [realpath => label] map from /etc/snapraid/ symlinks.
+    private function buildLabelMap()
     {
         $dir = "/etc/snapraid";
         if (!is_dir($dir)) {
-            return "";
+            throw new \OMV\Exception(gettext("/etc/snapraid does not exist!"));
         }
+        $map = [];
         $it = new DirectoryIterator($dir);
         foreach ($it as $entry) {
+            if ($entry->isDot()) continue;
             if (!$entry->isLink()) continue;
-            if (realpath($entry->getPathname()) === $confPath) {
-                return basename($entry->getPathname(), ".conf");
-            }
+            $path = $entry->getPathname();
+            if (!preg_match("/\.conf$/i", $path)) continue;
+            $real = realpath($path);
+            if ($real === false) continue;
+            $map[$real] = basename($path, ".conf");
         }
-        return "";
+        return $map;
+    }
+
+    private function getArrayLabel($confPath)
+    {
+        try {
+            $map = $this->buildLabelMap();
+        } catch (\Exception $e) {
+            return "";
+        }
+        return $map[$confPath] ?? "";
     }
 
     public function getSchedule($params, $context)
