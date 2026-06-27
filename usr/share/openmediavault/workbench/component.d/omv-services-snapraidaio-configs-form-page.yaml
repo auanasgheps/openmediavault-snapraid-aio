@@ -12,6 +12,7 @@ data:
           uuid: "{{ _routeParams.uuid }}"
       post:
         method: setConfig
+        successUrl: "/services/snapraidaio/configs"
     fields:
       - type: confObjUuid
       - type: hint
