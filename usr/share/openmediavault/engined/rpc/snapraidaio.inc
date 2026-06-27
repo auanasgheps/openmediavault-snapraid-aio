@@ -92,7 +92,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $params["uuid"] = \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID");
         }
         // Validate the parameters of the RPC service method.
-        if (isset($params["services"]) && $params["services"] !== null && $params["services"] !== "null") {
+        if (isset($params["services"]) && is_array($params["services"])) {
             $params["services"] = implode(",", $params["services"]);
         } else {
             $params["services"] = "";

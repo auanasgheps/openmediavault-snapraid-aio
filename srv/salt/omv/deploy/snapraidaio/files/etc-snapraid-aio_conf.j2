@@ -82,7 +82,8 @@ SERVICES="{{ config.services | default('', true) | replace(",", " ") }}"
 
 DOCKER_REMOTE={{ 1 if (config.docker_remote | default(False) | to_bool) else 0 }}
 DOCKER_USER="{{ config.docker_user | default('', true) }}"
-DOCKER_HOST_SERVICES=({% for line in (config.docker_host_services | default('', true)).splitlines() %}{% if line.strip() %}"{{ line.strip() }}"{{ " " if not loop.last }}{% endif %}{% endfor %})
+{% set _dhs = (config.docker_host_services | default('', true)).splitlines() | map('trim') | select | list %}
+DOCKER_HOST_SERVICES=({% for line in _dhs %}"{{ line }}"{{ " " if not loop.last }}{% endfor %})
 DOCKER_DELAY={{ config.docker_delay | default(0) }}
 
 ### CUSTOM HOOKS ###

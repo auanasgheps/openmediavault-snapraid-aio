@@ -22,7 +22,7 @@
     },
     "snapraid_conf": {
       "type": "string",
-      "default": "/etc/snapraid.conf"
+      "default": ""
     },
     "email_notifications": {
       "type": "boolean",
