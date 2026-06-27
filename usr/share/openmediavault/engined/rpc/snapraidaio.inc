@@ -59,12 +59,9 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                     \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $obj["cron_uuid"]], $context);
                     $obj["scheduled"] = true;
                 } catch (\Exception $e) {
-                    // Cron entry no longer exists; clear the stale UUID.
-                    $dbObj = $db->get("conf.service.snapraidaio.config", $obj["uuid"]);
-                    $dbObj->set("cron_uuid", "");
-                    $db->set($dbObj);
-                    $obj["cron_uuid"]  = "";
-                    $obj["scheduled"]  = false;
+                    // Cron entry no longer exists; report unscheduled without
+                    // writing back to the DB to avoid triggering an Apply banner.
+                    $obj["scheduled"] = false;
                 }
             } else {
                 $obj["scheduled"] = false;
@@ -155,8 +152,12 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         }
         // Remove the linked cron entry if one was saved.
         if (!empty($assoc["cron_uuid"])) {
-            \OMV\Rpc\Rpc::call("Cron", "delete",
-                ["uuid" => $assoc["cron_uuid"]], $context);
+            try {
+                \OMV\Rpc\Rpc::call("Cron", "delete",
+                    ["uuid" => $assoc["cron_uuid"]], $context);
+            } catch (\Exception $e) {
+                // Cron entry already gone; nothing to do.
+            }
         }
         // Return the deleted configuration object.
         return $assoc;
