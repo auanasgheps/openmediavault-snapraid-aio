@@ -3,3 +3,4 @@ type: route
 data:
   url: "/services/snapraidaio"
   title: _("SnapRAID AIO")
+  component: omv-services-snapraidaio-configs-datatable-page
