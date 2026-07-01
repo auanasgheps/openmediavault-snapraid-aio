@@ -98,13 +98,13 @@ data:
           - type: checkbox
             name: apprise
             label: _("Enable Apprise")
-            hint: _("Apprise can send notifications to Telegram, Discord, Slack, Gotify, and many other services. Unlike native email, Apprise can attach the full report when a warning is issued.")
+            hint: _("Apprise can send notifications to Telegram, Discord, Slack, Gotify, and many other services. Unlike native email, Apprise can attach the full report when a warning is issued. See the <a href='https://appriseit.com/services/' target='_blank'>supported services list</a> for all available integrations.")
             value: false
           - type: tagInput
             name: apprise_url
             label: _("Apprise URLs")
             value: ""
-            hint: _("Enter each Apprise URL and press Enter to add it. Multiple services are supported.")
+            hint: _("Enter each Apprise URL and press Enter to add it. Multiple services are supported. Refer to the <a href='https://appriseit.com/services/' target='_blank'>Apprise services page</a> for URL format and configuration examples.")
             modifiers:
               - type: disabled
                 constraint:
