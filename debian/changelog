@@ -1,121 +1,58 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
+  * Update bundled snapraid-aio-script to v3.4 stable release
+  * Replace global enable toggle with per-config Schedule button on the
+    datatable; each config gets its own cron entry via OMV's Cron RPC;
+    cron_uuid stored per-config so the schedule round-trips correctly
+  * Remove Settings page, Settings navigation entry, and global enable field
+  * Change default schedule to midnight daily so users can adjust the time
+    immediately without switching execution type
+  * Add Tools submenu to configs datatable: Force Sync (runs AIO script with
+    --force-sync, bypasses delete/update thresholds, requires confirmation) and
+    Sync (runs snapraid sync directly on the array); both stream output live
+    via taskDialog
+  * Add Run Now action to Tools submenu: runs the full AIO script for the
+    selected config (equivalent to the cron job), output streamed via taskDialog
+  * Add Last Log action to Tools submenu: displays the most recent
+    SnapRAID-*.txt log file in the configured log dir (falls back to /root)
+  * Add email_notifications toggle: enable/disable native OMV email per config;
+    sender and receiver are pulled read-only from OMV system notification
+    settings and hidden in the form when the feature is off
+  * Disable Telegram and Discord integrations (superseded by Apprise)
+  * Fix APPRISE_URL rendered as Bash array in generated config file
+  * Switch Apprise URL field to tagInput: supports multiple URLs as chips,
+    empty value now correctly renders APPRISE_URL=() instead of APPRISE_URL=("")
+  * Hardcode CHECK_UPDATES=0; updates ship with the package
+  * Improve SnapRAID array selector: show array name (label) instead of raw
+    config file path; resolve symlinks to stable UUID-based paths as stored
+    value; hide the /etc/snapraid.conf legacy symlink
+  * Add Array name column to config list table
+  * Add Scheduled column to config list table
+  * Pre-fill schedule comment with "SnapRAID AIO <array name>" on first-time creation
+  * Split UI threshold section into Sync thresholds, Scrub settings,
+    and SnapRAID options sections
+  * Add descriptive hints to fields that previously had none
+  * Fix misleading labels: force_zero, spindown, snap_status_notify,
+    apprise, apprise_email, execute_before_spindown, smart_log_notify
+  * Add info hint at top of config form linking to the AIO Script project page
+  * Add hint below SnapRAID array selector to guide users who see an empty
+    list to install the OMV SnapRAID plugin first
   * Fix custom hook fields: disable before/after hook inputs and
     execute_before_spindown when custom_hook toggle is off
   * Fix SNAPRAID_CONF template: use empty string default instead of
     /etc/snapraid.conf so a missing array selection fails clearly at
     script runtime rather than silently running against the wrong array
-  * Move empty-array hint below the SnapRAID array selector instead of above it
-  * Add hint above SnapRAID array selector to guide users who see an empty
-    list to install the OMV SnapRAID plugin first
-  * Remove dead 'enable' top-level field from datamodel (leftover from removed
-    global settings page; nothing reads or sets it)
-  * Remove docker_local from datamodel and RPC schema (unused; template always
-    derives DOCKER_LOCAL directly from manage_services)
+  * Fix breadcrumb label: add parent route for /services/snapraidaio with
+    title "SnapRAID AIO" so the breadcrumb shows "SnapRAID AIO" instead of
+    the raw URL segment "Snapraidaio"
   * Fix executeCommand: guard empty snapraid_conf in sync case with a clear
     error message instead of passing -c "" to the snapraid binary
   * Fix executeCommand: check AIO config file exists before invoking
     run/force-sync and surface a clear "apply settings first" error
-  * Refactor: extract getAioConfPath() helper to centralise the
-    /etc/snapraid-aio-<uuid>.conf path construction (was duplicated 4×)
-  * Add Run Now action to Tools submenu: runs the full AIO script for the
-    selected config (equivalent to the cron job), output streamed via taskDialog
-  * Add Last Log action to Tools submenu: displays the most recent
-    SnapRAID-*.txt log file in the configured log dir (falls back to /root)
-  * Add Tools submenu to configs datatable: Force Sync (runs AIO script with
-    --force-sync, bypasses delete/update thresholds, requires confirmation) and
-    Sync (runs snapraid sync directly on the array); both stream output live
-    via taskDialog
-  * Fix breadcrumb label: add parent route for /services/snapraidaio with
-    title "SnapRAID AIO" so the breadcrumb shows "SnapRAID AIO" instead of
-    the raw URL segment "Snapraidaio"
-  * Update bundled snapraid-aio-script to v3.4 stable release
-  * Add email_notifications toggle: enable/disable native OMV email per config;
-    sender and receiver are pulled read-only from OMV system notification
-    settings and hidden in the form when the feature is off
-  * Fix EMAIL_ADDRESS using sender instead of primaryemail from OMV email config
-  * Add Docker remote management fields to datamodel: docker_remote,
-    docker_user, docker_host_services, docker_delay
-  * Fix APPRISE_URL rendered as Bash array in generated config file
-  * Switch Apprise URL field to tagInput: supports multiple URLs as chips,
-    empty value now correctly renders APPRISE_URL=() instead of APPRISE_URL=("")
-  * Improve SnapRAID array selector: show array name (label) instead of raw
-    config file path; resolve symlinks to stable UUID-based paths as stored
-    value; hide the /etc/snapraid.conf legacy symlink
-  * Fix Salt deploy exit code 1 when all AIO configs are deleted (add noop state)
-  * Pre-fill schedule comment with "SnapRAID AIO <array name>" on first-time creation
-  * Add Array name column to config list table
-  * Add Scheduled column to config list table
-  * Fix email sender/receiver not populated on create form: set editing: true and
-    sentinel UUID on create route so getConfig fires; remove getEmailSettings RPC
-  * Fix create config 400 error: embed sentinel UUID in create route URL as path
-    segment (same pattern as edit/:uuid) so _routeParams.uuid is populated;
-    normalize empty uuid to sentinel in setConfig before schema validation
-  * Disable Telegram and Discord integrations (superseded by Apprise)
-  * Hardcode CHECK_UPDATES=0; updates ship with the package
-  * Wire EMAIL_ADDRESS/FROM_EMAIL_ADDRESS from OMV system email config
-  * Split UI threshold section into Sync thresholds, Scrub settings,
-    and SnapRAID options sections
-  * Add Remote Docker management section to config form
-  * Add descriptive hints to fields that previously had none
-  * Fix misleading labels: force_zero, spindown, snap_status_notify,
-    apprise, apprise_email, execute_before_spindown, smart_log_notify
-  * Improve form labels and hints: add Apprise section description, flag
-    ignore_pattern as advanced, rename snap_status/smart_log labels for
-    consistency, fix Apprise Email field order (enable → url → attach)
-  * Add info hint at top of config form linking to the AIO Script project page
-  * Remove Remote Docker management section from UI (advanced feature);
-    hardcode DOCKER_REMOTE=0 in generated config
-  * Fix confdb create script missing executable bit in git
-  * Replace global enable toggle with per-config Schedule button on the
-    datatable; each config gets its own cron entry via OMV's Cron RPC;
-    cron_uuid stored per-config so the schedule round-trips correctly
-  * Remove Settings page, Settings navigation entry, and global enable field
-  * Fix scheduling: cron_uuid field added to per-config datamodel; getSchedule
-    uses stored cron_uuid (blank form for new), setSchedule uses new-entry
-    sentinel on first save and persists returned UUID back to config
-  * Fix setSchedule missing validateMethodParams (uuid not validated before use)
-  * Fix setConfig to load existing object before setAssoc to preserve cron_uuid
   * Fix deleteConfig: remove /etc/snapraid-aio-<uuid>.conf and linked cron entry
-  * Fix Salt: query conf.service.snapraidaio.config directly via omv_conf.get
-    to avoid parent model field validation; normalise single/list return value
-  * Fix etc-snapraid-aio_conf.j2: replace invalid get_by_filter([]) calls for
-    email config with omv_conf.get on conf.system.notification.email
-  * Fix getSchedule crashing with XPath error: Cron::get does not accept
-    the new-entry sentinel UUID; return a hardcoded default object directly
-    when no cron entry exists yet, and also recover from stale cron_uuid by
-    clearing it and falling back to the same default; setSchedule retries
-    as a new entry when the stored cron_uuid is stale
-  * Fix setSchedule XPath error on save: getSchedule now returns uuid as
-    the config UUID (not the cron UUID) and carries cron_uuid as a separate
-    field; hidden cron_uuid field added to schedule form so it round-trips
-    back to setSchedule; setSchedule reads cron_uuid from params directly
-  * Change default schedule to custom (userdefined) at midnight daily so
-    users can adjust the time immediately without switching execution type
-  * Fix schedule form: replace invalid 'userdefined' execution value with
-    'exactly' (the correct value accepted by the Cron RPC)
-  * Fix setSchedule: wrap time fields as single-element arrays before
-    passing to Cron::set (required for 'exactly' execution type);
-    flatten arrays back to scalars in getSchedule for the form selects
-  * Fix setSchedule: add required everynminute/everynhour/everyndayofmonth
-    boolean fields (always false) to satisfy Cron RPC schema validation
-  * Refactor: consolidate duplicate /etc/snapraid/ scan logic into buildLabelMap;
-    enumerateConfigFiles and getConfigList both use the shared map (single scan)
-  * Fix DOCKER_HOST_SERVICES trailing space in Bash array when last lines are blank
-  * Fix snapraid_conf datamodel default from legacy /etc/snapraid.conf to empty string
-    it is not a field in conf.system.cron.job and causes a 500 error
-  * Fix schedule hour select: remove duplicate entries for hours 20-23 (copy-paste
-    artifact left when removing "every N hours" options)
-  * Fix getSchedule: remove spurious $db->set() on stale cron_uuid detection; now
-    consistent with getConfigList which already avoids DB writes to prevent the
-    Apply Changes banner from firing on a read-only path
+  * Fix Salt deploy exit code 1 when all AIO configs are deleted (add noop state)
   * Fix enumerateConfigFiles: wrap buildLabelMap() in try/catch so a missing
     /etc/snapraid directory returns an empty list instead of an RPC error dialog
-  * Fix snapraid_log_dir datamodel default: change from "$HOME" to "" so new
-    configs pre-populate with an empty field, consistent with the hint
-  * Refactor setSchedule: replace $cronUuid side-effect in catch block with an
-    explicit $isNewCron boolean; stale-cron recovery now clearly persists the
-    new cron UUID back to the config
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 
