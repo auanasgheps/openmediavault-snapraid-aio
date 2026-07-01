@@ -147,7 +147,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $assoc = $object->getAssoc();
         $db->delete($object);
         // Remove the generated AIO conf file if it exists.
-        $confFile = sprintf("/etc/snapraid-aio-%s.conf", $params["uuid"]);
+        $confFile = $this->getAioConfPath($params["uuid"]);
         if (file_exists($confFile)) {
             unlink($confFile);
         }
@@ -220,6 +220,11 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             }
         }
         return ($objects);
+    }
+
+    private function getAioConfPath($uuid)
+    {
+        return sprintf("/etc/snapraid-aio-%s.conf", $uuid);
     }
 
     // Build a [realpath => label] map from /etc/snapraid/ symlinks.
@@ -323,8 +328,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $cronParams["type"]     = "userdefined";
         $cronParams["username"] = "root";
         $cronParams["command"]  = sprintf(
-            "/usr/sbin/snapraid-aio-script.sh --config /etc/snapraid-aio-%s.conf",
-            $configUuid
+            "/usr/sbin/snapraid-aio-script.sh --config %s",
+            $this->getAioConfPath($configUuid)
         );
         // Required by the Cron schema; we always use fixed values, not "every N".
         $cronParams["everynminute"]     = false;
@@ -369,31 +374,50 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         }');
         $db = \OMV\Config\Database::getInstance();
         $object = $db->get("conf.service.snapraidaio.config", $params['uuid']);
+        $aioConf = $this->getAioConfPath($params['uuid']);
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
-                use ($object, $params) {
+                use ($object, $params, $aioConf) {
             switch ($params['command']) {
                 case "run":
+                    if (!file_exists($aioConf)) {
+                        throw new \OMV\Exception(gettext(
+                            "AIO config file not found. Please apply settings first."
+                        ));
+                    }
                     $cmdArgs = [
                         "/usr/sbin/snapraid-aio-script.sh",
-                        "--config", sprintf("/etc/snapraid-aio-%s.conf", $params['uuid'])
+                        "--config", $aioConf
                     ];
                     break;
                 case "force-sync":
+                    if (!file_exists($aioConf)) {
+                        throw new \OMV\Exception(gettext(
+                            "AIO config file not found. Please apply settings first."
+                        ));
+                    }
                     $cmdArgs = [
                         "/usr/sbin/snapraid-aio-script.sh",
-                        "--config", sprintf("/etc/snapraid-aio-%s.conf", $params['uuid']),
+                        "--config", $aioConf,
                         "--force-sync"
                     ];
                     break;
                 case "sync":
+                    $snapraidConf = $object->get("snapraid_conf");
+                    if (empty($snapraidConf)) {
+                        throw new \OMV\Exception(gettext(
+                            "No SnapRAID array selected. Please edit the config and choose an array."
+                        ));
+                    }
                     $cmdArgs = [
                         "/usr/bin/snapraid",
-                        "sync", "-c", $object->get("snapraid_conf")
+                        "sync", "-c", $snapraidConf
                     ];
                     break;
                 case "last-log":
                     $logDir = $object->get("snapraid_log_dir");
-                    if (empty($logDir)) {
+                    // Fall back to /root if empty or contains a shell variable
+                    // (e.g. the legacy default "$HOME" which PHP cannot expand).
+                    if (empty($logDir) || strpos($logDir, '$') !== false) {
                         $logDir = "/root";
                     }
                     $files = glob($logDir . "/SnapRAID-*.txt");

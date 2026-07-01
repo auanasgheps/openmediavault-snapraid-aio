@@ -1,5 +1,11 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
+  * Fix executeCommand: guard empty snapraid_conf in sync case with a clear
+    error message instead of passing -c "" to the snapraid binary
+  * Fix executeCommand: check AIO config file exists before invoking
+    run/force-sync and surface a clear "apply settings first" error
+  * Refactor: extract getAioConfPath() helper to centralise the
+    /etc/snapraid-aio-<uuid>.conf path construction (was duplicated 4×)
   * Add Run Now action to Tools submenu: runs the full AIO script for the
     selected config (equivalent to the cron job), output streamed via taskDialog
   * Add Last Log action to Tools submenu: displays the most recent
