@@ -11,6 +11,8 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add Docker remote management fields to datamodel: docker_remote,
     docker_user, docker_host_services, docker_delay
   * Fix APPRISE_URL rendered as Bash array in generated config file
+  * Switch Apprise URL field to tagInput: supports multiple URLs as chips,
+    empty value now correctly renders APPRISE_URL=() instead of APPRISE_URL=("")
   * Improve SnapRAID array selector: show array name (label) instead of raw
     config file path; resolve symlinks to stable UUID-based paths as stored
     value; hide the /etc/snapraid.conf legacy symlink

@@ -24,7 +24,7 @@ HEALTHCHECKS_ID="{{ config.healthchecks_id | default('', true) }}"
 HEALTHCHECKS_URL="{{ config.healthchecks_url | default('https://hc-ping.com/', true) }}"
 
 APPRISE={{ 1 if (config.apprise | default(False) | to_bool) else 0 }}
-APPRISE_URL=("{{ config.apprise_url | default('', true) }}")
+APPRISE_URL=({% set _urls = config.apprise_url | default('', true) %}{% for url in _urls.split(',') if url.strip() %}"{{ url.strip() }}"{{ " " if not loop.last }}{% endfor %})
 APPRISE_ATTACH={{ 1 if (config.apprise_attach | default(False) | to_bool) else 0 }}
 
 APPRISE_EMAIL={{ 1 if (config.apprise_email | default(False) | to_bool) else 0 }}

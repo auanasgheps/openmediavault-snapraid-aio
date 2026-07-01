@@ -100,11 +100,11 @@ data:
             label: _("Enable Apprise")
             hint: _("Apprise can send notifications to Telegram, Discord, Slack, Gotify, and many other services. Unlike native email, Apprise can attach the full report when a warning is issued.")
             value: false
-          - type: textInput
+          - type: tagInput
             name: apprise_url
-            label: _("Apprise URL")
+            label: _("Apprise URLs")
             value: ""
-            hint: _("Notification service URL. Multiple URLs can be separated by spaces. See the Apprise documentation for format examples.")
+            hint: _("Enter each Apprise URL and press Enter to add it. Multiple services are supported.")
             modifiers:
               - type: disabled
                 constraint:
