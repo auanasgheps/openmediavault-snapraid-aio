@@ -363,7 +363,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             "type": "object",
             "properties": {
                 "uuid": { "type": "string" },
-                "command": { "type": "string", "enum": ["sync", "force-sync"] }
+                "command": { "type": "string", "enum": ["sync", "force-sync", "run", "last-log"] }
             },
             "required": ["uuid", "command"]
         }');
@@ -372,6 +372,12 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
                 use ($object, $params) {
             switch ($params['command']) {
+                case "run":
+                    $cmdArgs = [
+                        "/usr/sbin/snapraid-aio-script.sh",
+                        "--config", sprintf("/etc/snapraid-aio-%s.conf", $params['uuid'])
+                    ];
+                    break;
                 case "force-sync":
                     $cmdArgs = [
                         "/usr/sbin/snapraid-aio-script.sh",
@@ -384,6 +390,19 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                         "/usr/bin/snapraid",
                         "sync", "-c", $object->get("snapraid_conf")
                     ];
+                    break;
+                case "last-log":
+                    $logDir = $object->get("snapraid_log_dir");
+                    if (empty($logDir)) {
+                        $logDir = "/root";
+                    }
+                    $files = glob($logDir . "/SnapRAID-*.txt");
+                    if (empty($files)) {
+                        $cmdArgs = ["/bin/echo", "No log files found in " . $logDir . "."];
+                    } else {
+                        usort($files, fn($a, $b) => filemtime($b) - filemtime($a));
+                        $cmdArgs = ["/bin/cat", $files[0]];
+                    }
                     break;
             }
             $cmd = new \OMV\System\Process($cmdArgs);

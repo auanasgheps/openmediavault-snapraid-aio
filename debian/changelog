@@ -1,5 +1,9 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
+  * Add Run Now action to Tools submenu: runs the full AIO script for the
+    selected config (equivalent to the cron job), output streamed via taskDialog
+  * Add Last Log action to Tools submenu: displays the most recent
+    SnapRAID-*.txt log file in the configured log dir (falls back to /root)
   * Add Tools submenu to configs datatable: Force Sync (runs AIO script with
     --force-sync, bypasses delete/update thresholds, requires confirmation) and
     Sync (runs snapraid sync directly on the array); both stream output live

@@ -54,6 +54,21 @@ data:
           minSelected: 1
           maxSelected: 1
         actions:
+          - text: _("Run Now")
+            icon: mdi:play-circle
+            execute:
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Run Now ...")
+                  startOnInit: true
+                  request:
+                    service: SnapRaidAio
+                    method: executeCommand
+                    params:
+                      uuid: "{{ _selected[0].uuid }}"
+                      command: "run"
+                successUrl: /services/snapraidaio/configs
           - text: _("Force Sync")
             icon: mdi:sync-alert
             confirmationDialogConfig:
@@ -86,6 +101,21 @@ data:
                     params:
                       uuid: "{{ _selected[0].uuid }}"
                       command: "sync"
+                successUrl: /services/snapraidaio/configs
+          - text: _("Last Log")
+            icon: mdi:text-box-outline
+            execute:
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Last Log")
+                  startOnInit: true
+                  request:
+                    service: SnapRaidAio
+                    method: executeCommand
+                    params:
+                      uuid: "{{ _selected[0].uuid }}"
+                      command: "last-log"
                 successUrl: /services/snapraidaio/configs
       - template: delete
         execute:
