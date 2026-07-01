@@ -47,6 +47,46 @@ data:
         execute:
           type: url
           url: "/services/snapraidaio/configs/schedule/{{ _selected[0].uuid }}"
+      - type: menu
+        icon: mdi:tools
+        tooltip: _("Tools")
+        enabledConstraints:
+          minSelected: 1
+          maxSelected: 1
+        actions:
+          - text: _("Force Sync")
+            icon: mdi:sync-alert
+            confirmationDialogConfig:
+              template: confirmation-danger
+              message: _("Are you sure you want to force a sync? This bypasses the delete and update thresholds.")
+            execute:
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Force Sync ...")
+                  startOnInit: true
+                  request:
+                    service: SnapRaidAio
+                    method: executeCommand
+                    params:
+                      uuid: "{{ _selected[0].uuid }}"
+                      command: "force-sync"
+                successUrl: /services/snapraidaio/configs
+          - text: _("Sync")
+            icon: mdi:sync
+            execute:
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Sync ...")
+                  startOnInit: true
+                  request:
+                    service: SnapRaidAio
+                    method: executeCommand
+                    params:
+                      uuid: "{{ _selected[0].uuid }}"
+                      command: "sync"
+                successUrl: /services/snapraidaio/configs
       - template: delete
         execute:
           type: request

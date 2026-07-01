@@ -36,6 +36,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->registerMethod("getContainers");
         $this->registerMethod("getSchedule");
         $this->registerMethod("setSchedule");
+        $this->registerMethod("executeCommand");
     }
 
     public function getConfigList($params, $context)
@@ -353,5 +354,52 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $db->set($configObject);
         }
         return $cronResult;
+    }
+
+    public function executeCommand($params, $context)
+    {
+        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
+        $this->validateMethodParams($params, '{
+            "type": "object",
+            "properties": {
+                "uuid": { "type": "string", "format": "uuid" },
+                "command": { "type": "string", "enum": ["sync", "force-sync"] }
+            },
+            "required": ["uuid", "command"]
+        }');
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get("conf.service.snapraidaio.config", $params['uuid']);
+        $bgStatusFilename = $this->createBgProcStatus();
+        $pid = $this->fork();
+        if ($pid > 0) {
+            return $bgStatusFilename;
+        }
+        $bgOutputFilename = $this->createBgProcOutput();
+        try {
+            $this->updateBgProcStatus($bgStatusFilename, "running");
+            switch ($params['command']) {
+                case "force-sync":
+                    $cmdArgs = [
+                        "/usr/sbin/snapraid-aio-script.sh",
+                        "-c", sprintf("/etc/snapraid-aio-%s.conf", $params['uuid']),
+                        "--force-sync"
+                    ];
+                    break;
+                case "sync":
+                    $cmdArgs = [
+                        "/usr/bin/snapraid",
+                        "sync", "-c", $object->get("snapraid_conf")
+                    ];
+                    break;
+            }
+            $cmd = new \OMV\System\Process($cmdArgs);
+            $cmd->setRedirect2to1();
+            $cmdLine = $cmd->getCommandLine();
+            $this->exec($cmdLine, $output, $bgOutputFilename);
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
+        } catch (\Exception $e) {
+            $this->finalizeBgProcStatus($bgStatusFilename, null, $e);
+            throw $e;
+        }
     }
 }

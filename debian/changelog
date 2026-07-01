@@ -1,5 +1,9 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
+  * Add Tools submenu to configs datatable: Force Sync (runs AIO script with
+    --force-sync, bypasses delete/update thresholds, requires confirmation) and
+    Sync (runs snapraid sync directly on the array); both stream output live
+    via taskDialog
   * Fix breadcrumb label: add parent route for /services/snapraidaio with
     title "SnapRAID AIO" so the breadcrumb shows "SnapRAID AIO" instead of
     the raw URL segment "Snapraidaio"
