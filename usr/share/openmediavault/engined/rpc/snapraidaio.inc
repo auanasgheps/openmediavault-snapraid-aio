@@ -323,7 +323,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $cronParams["type"]     = "userdefined";
         $cronParams["username"] = "root";
         $cronParams["command"]  = sprintf(
-            "/usr/sbin/snapraid-aio-script.sh -c /etc/snapraid-aio-%s.conf",
+            "/usr/sbin/snapraid-aio-script.sh --config /etc/snapraid-aio-%s.conf",
             $configUuid
         );
         // Required by the Cron schema; we always use fixed values, not "every N".
@@ -375,7 +375,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                 case "force-sync":
                     $cmdArgs = [
                         "/usr/sbin/snapraid-aio-script.sh",
-                        "-c", sprintf("/etc/snapraid-aio-%s.conf", $params['uuid']),
+                        "--config", sprintf("/etc/snapraid-aio-%s.conf", $params['uuid']),
                         "--force-sync"
                     ];
                     break;
