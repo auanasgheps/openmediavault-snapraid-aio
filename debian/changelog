@@ -7,7 +7,10 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     script runtime rather than silently running against the wrong array
   * Add hint above SnapRAID array selector to guide users who see an empty
     list to install the OMV SnapRAID plugin first
-  * Improve debian/control package description
+  * Remove dead 'enable' top-level field from datamodel (leftover from removed
+    global settings page; nothing reads or sets it)
+  * Remove docker_local from datamodel and RPC schema (unused; template always
+    derives DOCKER_LOCAL directly from manage_services)
   * Fix executeCommand: guard empty snapraid_conf in sync case with a clear
     error message instead of passing -c "" to the snapraid binary
   * Fix executeCommand: check AIO config file exists before invoking

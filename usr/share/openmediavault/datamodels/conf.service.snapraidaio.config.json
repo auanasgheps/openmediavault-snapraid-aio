@@ -7,10 +7,6 @@
     "iterable": true,
     "idproperty": "uuid"
   },
-  "enable": {
-    "type": "boolean",
-    "default": false
-  },
   "properties": {
     "uuid": {
       "type": "string",
@@ -160,10 +156,6 @@
         2
       ],
       "default": 1
-    },
-    "docker_local": {
-      "type": "boolean",
-      "default": false
     },
     "services": {
       "type": "string",
