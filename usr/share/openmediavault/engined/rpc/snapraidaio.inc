@@ -369,14 +369,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         }');
         $db = \OMV\Config\Database::getInstance();
         $object = $db->get("conf.service.snapraidaio.config", $params['uuid']);
-        $bgStatusFilename = $this->createBgProcStatus();
-        $pid = $this->fork();
-        if ($pid > 0) {
-            return $bgStatusFilename;
-        }
-        $bgOutputFilename = $this->createBgProcOutput();
-        try {
-            $this->updateBgProcStatus($bgStatusFilename, "running");
+        return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
+                use ($object, $params) {
             switch ($params['command']) {
                 case "force-sync":
                     $cmdArgs = [
@@ -396,10 +390,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $cmd->setRedirect2to1();
             $cmdLine = $cmd->getCommandLine();
             $this->exec($cmdLine, $output, $bgOutputFilename);
-            $this->finalizeBgProcStatus($bgStatusFilename, $output);
-        } catch (\Exception $e) {
-            $this->finalizeBgProcStatus($bgStatusFilename, null, $e);
-            throw $e;
-        }
+            return $output;
+        });
     }
 }
