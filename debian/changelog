@@ -5,6 +5,7 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix SNAPRAID_CONF template: use empty string default instead of
     /etc/snapraid.conf so a missing array selection fails clearly at
     script runtime rather than silently running against the wrong array
+  * Move empty-array hint below the SnapRAID array selector instead of above it
   * Add hint above SnapRAID array selector to guide users who see an empty
     list to install the OMV SnapRAID plugin first
   * Remove dead 'enable' top-level field from datamodel (leftover from removed

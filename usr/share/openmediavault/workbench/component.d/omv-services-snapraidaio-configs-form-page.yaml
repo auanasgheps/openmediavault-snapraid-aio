@@ -17,9 +17,6 @@ data:
       - type: hint
         hintType: info
         text: _("For full documentation and configuration reference, see the <a href='https://github.com/auanasgheps/snapraid-aio-script' target='_blank'>SnapRAID AIO Script project page</a>.")
-      - type: hint
-        hintType: info
-        text: _("If the array list is empty, install and configure SnapRAID via the OMV SnapRAID plugin first, then return here.")
       - type: select
         name: snapraid_conf
         label: _("SnapRAID array")
@@ -31,6 +28,9 @@ data:
             service: SnapRaidAio
             get:
               method: enumerateConfigFiles
+      - type: hint
+        hintType: info
+        text: _("If the array list is empty, install and configure SnapRAID via the OMV SnapRAID plugin first, then return here.")
 
       - type: divider
         title: _("Email Notifications")
