@@ -17,6 +17,9 @@ data:
       - type: hint
         hintType: info
         text: _("For full documentation and configuration reference, see the <a href='https://github.com/auanasgheps/snapraid-aio-script' target='_blank'>SnapRAID AIO Script project page</a>.")
+      - type: hint
+        hintType: info
+        text: _("If the array list is empty, install and configure SnapRAID via the OMV SnapRAID plugin first, then return here.")
       - type: select
         name: snapraid_conf
         label: _("SnapRAID array")
@@ -357,6 +360,12 @@ data:
         label: _("Before hook name")
         value: ""
         hint: _("Display name shown in the log output.")
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: custom_hook
       - type: textArea
         name: before_hook_cmd
         label: _("Before hook command")
@@ -364,12 +373,24 @@ data:
         rows: 2
         value: ""
         hint: _("Shell command or script path. Runs before SnapRAID operations start.")
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: custom_hook
 
       - type: textInput
         name: after_hook_name
         label: _("After hook name")
         value: ""
         hint: _("Display name shown in the log output.")
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: custom_hook
       - type: textArea
         name: after_hook_cmd
         label: _("After hook command")
@@ -377,12 +398,24 @@ data:
         rows: 2
         value: ""
         hint: _("Shell command or script path. Runs after SnapRAID operations complete.")
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: custom_hook
 
       - type: checkbox
         name: execute_before_spindown
         label: _("Execute after hook before spindown")
         value: false
         hint: _("Run the after hook before spinning down disks instead of after.")
+        modifiers:
+          - type: disabled
+            constraint:
+              operator: falsy
+              arg0:
+                prop: custom_hook
     buttons:
       - template: submit
         execute:

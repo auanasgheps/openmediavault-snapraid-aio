@@ -1,5 +1,13 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
+  * Fix custom hook fields: disable before/after hook inputs and
+    execute_before_spindown when custom_hook toggle is off
+  * Fix SNAPRAID_CONF template: use empty string default instead of
+    /etc/snapraid.conf so a missing array selection fails clearly at
+    script runtime rather than silently running against the wrong array
+  * Add hint above SnapRAID array selector to guide users who see an empty
+    list to install the OMV SnapRAID plugin first
+  * Improve debian/control package description
   * Fix executeCommand: guard empty snapraid_conf in sync case with a clear
     error message instead of passing -c "" to the snapraid binary
   * Fix executeCommand: check AIO config file exists before invoking

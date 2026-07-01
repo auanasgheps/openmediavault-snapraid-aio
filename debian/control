@@ -14,5 +14,8 @@ Depends: bc,
          openmediavault (>= 8),
          python3-markdown,
          snapraid (>= 12)
-Description: snapraid-aio plugin for OpenMediaVault.
- Plugin to configure snapraid-aio script.
+Description: SnapRAID AIO plugin for OpenMediaVault
+ Integrates the SnapRAID AIO Script into the OpenMediaVault web interface.
+ Provides per-array configuration, scheduled sync/scrub via the OMV cron
+ system, email and Apprise notifications, Docker container management, and
+ live output streaming for manual runs directly from the UI.

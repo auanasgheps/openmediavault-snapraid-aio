@@ -69,7 +69,7 @@ SMART_LOG_NOTIFY={{ 1 if (config.smart_log_notify | default(False) | to_bool) el
 SNAP_STATUS={{ 1 if (config.snap_status | default(False) | to_bool) else 0 }}
 SNAP_STATUS_NOTIFY={{ 1 if (config.snap_status_notify | default(False) | to_bool) else 0 }}
 
-SNAPRAID_CONF="{{ config.snapraid_conf | default('/etc/snapraid.conf', true) }}"
+SNAPRAID_CONF="{{ config.snapraid_conf | default('', true) }}"
 IGNORE_PATTERN=({% for p in (config.ignore_pattern | default('', true)).split() %}"{{ p }}"{{ " " if not loop.last }}{% endfor %})
 
 ### DOCKER CONTAINERS MANAGEMENT ###
