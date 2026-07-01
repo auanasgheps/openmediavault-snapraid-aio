@@ -130,13 +130,13 @@ data:
           - type: checkbox
             name: apprise_email
             label: _("Enable Apprise email")
-            hint: _("Uses Apprise to send email. Does not require the Apprise feature above. Configure using an Apprise email URL for SMTP or a public mail provider.")
+            hint: _("Uses Apprise to send email. Does not require the Apprise feature above. See the <a href='https://appriseit.com/services/email/' target='_blank'>Apprise email documentation</a> for SMTP and provider setup.")
             value: false
           - type: textInput
             name: apprise_email_url
             label: _("Apprise Email URL")
             value: ""
-            hint: _("Apprise email service URL. See the Apprise email documentation for SMTP and provider format examples.")
+            hint: _("Apprise email service URL. Refer to the <a href='https://appriseit.com/services/email/' target='_blank'>Apprise email documentation</a> for SMTP and provider URL format examples.")
             modifiers:
               - type: disabled
                 constraint:
