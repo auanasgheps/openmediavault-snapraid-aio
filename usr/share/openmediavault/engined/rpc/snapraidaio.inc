@@ -362,7 +362,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodParams($params, '{
             "type": "object",
             "properties": {
-                "uuid": { "type": "string", "format": "uuid" },
+                "uuid": { "type": "string" },
                 "command": { "type": "string", "enum": ["sync", "force-sync"] }
             },
             "required": ["uuid", "command"]
