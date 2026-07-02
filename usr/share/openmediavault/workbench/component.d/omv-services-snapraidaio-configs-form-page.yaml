@@ -63,7 +63,7 @@ data:
                 prop: email_notifications
 
       - type: divider
-        title: _("Healthchecks")
+        title: _("Healthchecks.io")
       - type: container
         fields:
           - type: checkbox
@@ -235,7 +235,7 @@ data:
         name: spindown
         label: _("Spin down disks when done")
         value: false
-        hint: _("Spin down disks after the script completes using hd-idle.")
+        hint: _("Spin down disks after the script completes using hd-idle. hd-idle is not installed automatically — see the <a href='https://github.com/auanasgheps/snapraid-aio-script#installing-hd-idle-for-automatic-disk-spindown' target='_blank'>installation instructions</a> before enabling this option.")
 
       - type: checkbox
         name: verbosity

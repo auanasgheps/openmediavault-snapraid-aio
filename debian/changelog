@@ -3,6 +3,8 @@ openmediavault-snapraid-aio (8.2) stable; urgency=low
   * Delete /etc/snapraid-aio-*.conf files on package purge
   * Clarify in the UI that Apprise is auto-installed via pipx on first use
     and requires an internet connection at that point
+  * Rename "Healthchecks" section title to "Healthchecks.io"
+  * Add hint on spindown option that hd-idle is not installed automatically
 
  -- auanasgheps <auanasgheps@users.noreply.github.com>  Wed, 02 Jul 2026 00:00:00 +0000
 
