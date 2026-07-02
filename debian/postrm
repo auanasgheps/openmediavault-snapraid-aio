@@ -13,6 +13,7 @@ case "$1" in
     purge)
         remove_action
         omv_config_delete "/config/services/snapraidaio"
+        rm -f /etc/snapraid-aio-*.conf
     ;;
 
     remove)

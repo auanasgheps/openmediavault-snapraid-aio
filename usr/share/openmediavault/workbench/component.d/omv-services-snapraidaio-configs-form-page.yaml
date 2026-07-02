@@ -101,7 +101,7 @@ data:
           - type: checkbox
             name: apprise
             label: _("Enable Apprise")
-            hint: _("Apprise can send notifications to Telegram, Discord, Slack, Gotify, and many other services. Unlike native email, Apprise can attach the full report when a warning is issued. See the <a href='https://appriseit.com/services/' target='_blank'>supported services list</a> for all available integrations.")
+            hint: _("Apprise can send notifications to Telegram, Discord, Slack, Gotify, and many other services. Unlike native email, Apprise can attach the full report when a warning is issued. See the <a href='https://appriseit.com/services/' target='_blank'>supported services list</a> for all available integrations. Apprise is not pre-installed — if missing, it will be installed automatically via pipx on the first run. An internet connection is required at that point.")
             value: false
           - type: tagInput
             name: apprise_url
@@ -133,7 +133,7 @@ data:
           - type: checkbox
             name: apprise_email
             label: _("Enable Apprise email")
-            hint: _("Uses Apprise to send email. Does not require the Apprise feature above. See the <a href='https://appriseit.com/services/email/' target='_blank'>Apprise email documentation</a> for SMTP and provider setup.")
+            hint: _("Uses Apprise to send email. Does not require the Apprise feature above. See the <a href='https://appriseit.com/services/email/' target='_blank'>Apprise email documentation</a> for SMTP and provider setup. Apprise is not pre-installed — if missing, it will be installed automatically via pipx on the first run. An internet connection is required at that point.")
             value: false
           - type: textInput
             name: apprise_email_url
