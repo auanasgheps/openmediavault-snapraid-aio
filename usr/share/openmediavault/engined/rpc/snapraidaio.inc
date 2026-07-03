@@ -151,6 +151,13 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         if (file_exists($confFile)) {
             unlink($confFile);
         }
+        // Remove per-array state files (warn/scrub counters).
+        foreach (["warnCount", "scrubCount"] as $suffix) {
+            $stateFile = sprintf("/var/lib/snapraidaio/%s.%s", $params["uuid"], $suffix);
+            if (file_exists($stateFile)) {
+                unlink($stateFile);
+            }
+        }
         // Remove the linked cron entry if one was saved.
         if (!empty($assoc["cron_uuid"])) {
             try {
@@ -184,7 +191,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
     public function getContainers($params, $context)
     {
         // Validate the RPC caller context.
-        $this->validateMethodContext($context, ["role" => OMV_ROLE_EVERYONE]);
+        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
         $objects = [];
         $status = "";
         // check to see if docker is installed and running

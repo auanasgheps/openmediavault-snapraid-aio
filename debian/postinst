@@ -17,7 +17,10 @@ case "$1" in
             omv-confdbadm migrate "conf.service.snapraidaio" "${2}"
         fi
 
-        omv-salt deploy run --quiet snapraidaio || :
+        # Create the state directory for per-array warn/scrub counters.
+        install -d -m 0750 -o root -g root /var/lib/snapraidaio
+
+        omv-salt deploy run snapraidaio
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

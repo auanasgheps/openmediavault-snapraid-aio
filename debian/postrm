@@ -14,6 +14,7 @@ case "$1" in
         remove_action
         omv_config_delete "/config/services/snapraidaio"
         rm -f /etc/snapraid-aio-*.conf
+        rm -rf /var/lib/snapraidaio
     ;;
 
     remove)

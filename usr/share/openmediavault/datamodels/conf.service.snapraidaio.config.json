@@ -74,6 +74,8 @@
     },
     "add_del_threshold": {
       "type": "number",
+      "minimum": 0,
+      "maximum": 1,
       "default": 0
     },
     "sync_warn_threshold": {

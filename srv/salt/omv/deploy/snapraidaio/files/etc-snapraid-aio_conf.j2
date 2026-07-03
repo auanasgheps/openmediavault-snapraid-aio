@@ -107,9 +107,9 @@ CHK_FAIL=0
 DO_SYNC=0
 EMAIL_SUBJECT_PREFIX="(SnapRAID on $(hostname))"
 SERVICES_STOPPED=0
-SYNC_WARN_FILE="$CURRENT_DIR/snapRAID.warnCount"
-SCRUB_COUNT_FILE="$CURRENT_DIR/snapRAID.scrubCount"
-TMP_OUTPUT="/tmp/snapRAID.out"
+SYNC_WARN_FILE="/var/lib/snapraidaio/{{ config.uuid }}.warnCount"
+SCRUB_COUNT_FILE="/var/lib/snapraidaio/{{ config.uuid }}.scrubCount"
+TMP_OUTPUT="/tmp/snapRAID-{{ config.uuid }}.out"
 SNAPRAID_LOG="/var/log/snapraid.log"
 SECONDS=0
 

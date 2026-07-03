@@ -12,6 +12,7 @@
         },
         "snapraid_conf": {
           "type": "string",
+          "minLength": 1,
           "required": true
         },
         "email_notifications": {
@@ -73,7 +74,7 @@
         "add_del_threshold": {
           "type": "number",
           "minimum": 0,
-          "maximum": 10,
+          "maximum": 1,
           "required": true
         },
         "sync_warn_threshold": {

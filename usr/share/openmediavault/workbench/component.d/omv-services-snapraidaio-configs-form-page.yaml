@@ -23,6 +23,8 @@ data:
         value: ""
         valueField: path
         textField: label
+        validators:
+          required: true
         store:
           proxy:
             service: SnapRaidAio
@@ -75,7 +77,7 @@ data:
             name: healthchecks_id
             label: _("Healthchecks UUID")
             value: ""
-            hint: _("Enter the UUID only, not the full URL.")
+            hint: _("UUID only, e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx. Do not paste the full ping URL — the base URL above is added automatically.")
             modifiers:
               - type: disabled
                 constraint:
@@ -164,7 +166,7 @@ data:
         value: ""
         monospaced: true
         rows: 2
-        hint: _("Legacy option, superseded by Apprise. Script or command called instead of the default email. SUBJECT and BODY are passed as parameters.")
+        hint: _("Legacy option, superseded by Apprise. Script or command called instead of the default email. SUBJECT and BODY are passed as parameters. Runs as root — enter only trusted commands.")
 
       - type: divider
         title: _("Sync thresholds")
@@ -186,7 +188,7 @@ data:
         value: 0
         min: 0
         step: 0.01
-        hint: _("Allow sync even if delete threshold is exceeded, if enough files were also added. 0 disables. Example&colon; 0.76 means at least 76% of deleted files must have a matching add.")
+        hint: _("Allow sync even if delete threshold is exceeded, if enough files were also added. 0 disables. Range: 0.0–1.0. Example&colon; 0.76 means at least 76% of deleted files must have a matching add.")
       - type: numberInput
         name: sync_warn_threshold
         label: _("Sync warning threshold")
@@ -253,7 +255,7 @@ data:
         name: snapraid_log_dir
         label: _("SnapRAID log directory")
         value: ""
-        hint: _("Directory for log files. Leave empty to use the home directory.")
+        hint: _("Absolute path to the directory for log files. Leave empty to use the home directory.")
 
       - type: container
         fields:
@@ -372,7 +374,7 @@ data:
         monospaced: true
         rows: 2
         value: ""
-        hint: _("Shell command or script path. Runs before SnapRAID operations start.")
+        hint: _("Shell command or script path. Runs as root before SnapRAID operations start — enter only trusted commands.")
         modifiers:
           - type: disabled
             constraint:
@@ -397,7 +399,7 @@ data:
         monospaced: true
         rows: 2
         value: ""
-        hint: _("Shell command or script path. Runs after SnapRAID operations complete.")
+        hint: _("Shell command or script path. Runs as root after SnapRAID operations complete — enter only trusted commands.")
         modifiers:
           - type: disabled
             constraint:
