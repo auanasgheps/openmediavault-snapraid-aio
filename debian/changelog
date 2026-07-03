@@ -1,19 +1,10 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
-  * Delete /etc/snapraid-aio-*.conf files on package purge
-  * Clarify in the UI that Apprise is auto-installed via pipx on first use
-    and requires an internet connection at that point
-  * Rename "Healthchecks" section title to "Healthchecks.io"
-  * Add hint on spindown option that hd-idle is not installed automatically
-  * Add confirmation prompt on Schedule button warning that the array must
-    be synced at least once before scheduling the AIO script
   * Update bundled snapraid-aio-script to v3.4 stable release
   * Replace global enable toggle with per-config Schedule button on the
     datatable; each config gets its own cron entry via OMV's Cron RPC;
     cron_uuid stored per-config so the schedule round-trips correctly
   * Remove Settings page, Settings navigation entry, and global enable field
-  * Change default schedule to midnight daily so users can adjust the time
-    immediately without switching execution type
   * Add Tools submenu to configs datatable: Force Sync (runs AIO script with
     --force-sync, bypasses delete/update thresholds, requires confirmation) and
     Sync (runs snapraid sync directly on the array); both stream output live
@@ -25,16 +16,18 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add email_notifications toggle: enable/disable native OMV email per config;
     sender and receiver are pulled read-only from OMV system notification
     settings and hidden in the form when the feature is off
-  * Disable Telegram and Discord integrations (superseded by Apprise)
-  * Fix APPRISE_URL rendered as Bash array in generated config file
-  * Switch Apprise URL field to tagInput: supports multiple URLs as chips,
-    empty value now correctly renders APPRISE_URL=() instead of APPRISE_URL=("")
-  * Hardcode CHECK_UPDATES=0; updates ship with the package
+  * Add confirmation prompt on Schedule button warning that the array must
+    be synced at least once before scheduling the AIO script
+  * Change default schedule to midnight daily so users can adjust the time
+    immediately without switching execution type
   * Improve SnapRAID array selector: show array name (label) instead of raw
     config file path; resolve symlinks to stable UUID-based paths as stored
     value; hide the /etc/snapraid.conf legacy symlink
   * Add Array name column to config list table
   * Add Scheduled column to config list table
+  * Switch Apprise URL field to tagInput: supports multiple URLs as chips,
+    empty value now correctly renders APPRISE_URL=() instead of APPRISE_URL=("")
+  * Disable Telegram and Discord integrations (superseded by Apprise)
   * Pre-fill schedule comment with "SnapRAID AIO <array name>" on first-time creation
   * Split UI threshold section into Sync thresholds, Scrub settings,
     and SnapRAID options sections
@@ -44,6 +37,12 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add info hint at top of config form linking to the AIO Script project page
   * Add hint below SnapRAID array selector to guide users who see an empty
     list to install the OMV SnapRAID plugin first
+  * Add hint on spindown option that hd-idle is not installed automatically
+  * Clarify in the UI that Apprise is auto-installed via pipx on first use
+    and requires an internet connection at that point
+  * Rename "Healthchecks" section title to "Healthchecks.io"
+  * Hardcode CHECK_UPDATES=0; updates ship with the package
+  * Fix APPRISE_URL rendered as Bash array in generated config file
   * Fix custom hook fields: disable before/after hook inputs and
     execute_before_spindown when custom_hook toggle is off
   * Fix SNAPRAID_CONF template: use empty string default instead of
@@ -60,6 +59,7 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix Salt deploy exit code 1 when all AIO configs are deleted (add noop state)
   * Fix enumerateConfigFiles: wrap buildLabelMap() in try/catch so a missing
     /etc/snapraid directory returns an empty list instead of an RPC error dialog
+  * Delete /etc/snapraid-aio-*.conf files on package purge
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
 
