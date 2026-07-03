@@ -45,8 +45,15 @@ data:
           minSelected: 1
           maxSelected: 1
         confirmationDialogConfig:
-          template: confirmation
+          template: confirmation-critical
           message: _("Before scheduling, make sure the array has been synced at least once. Use Tools → Sync to perform the initial sync for a new array.")
+          buttons:
+            - text: _("Cancel")
+              dialogResult: false
+              autofocus: true
+            - text: _("Ok")
+              dialogResult: true
+              class: omv-background-color-pair-primary
         execute:
           type: url
           url: "/services/snapraidaio/configs/schedule/{{ _selected[0].uuid }}"

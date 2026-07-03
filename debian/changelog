@@ -1,4 +1,4 @@
-openmediavault-snapraid-aio (8.2) stable; urgency=low
+openmediavault-snapraid-aio (8.1) stable; urgency=low
 
   * Delete /etc/snapraid-aio-*.conf files on package purge
   * Clarify in the UI that Apprise is auto-installed via pipx on first use
@@ -7,11 +7,6 @@ openmediavault-snapraid-aio (8.2) stable; urgency=low
   * Add hint on spindown option that hd-idle is not installed automatically
   * Add confirmation prompt on Schedule button warning that the array must
     be synced at least once before scheduling the AIO script
-
- -- auanasgheps <auanasgheps@users.noreply.github.com>  Wed, 02 Jul 2026 00:00:00 +0000
-
-openmediavault-snapraid-aio (8.1) stable; urgency=low
-
   * Update bundled snapraid-aio-script to v3.4 stable release
   * Replace global enable toggle with per-config Schedule button on the
     datatable; each config gets its own cron entry via OMV's Cron RPC;
