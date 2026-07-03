@@ -5,6 +5,8 @@ openmediavault-snapraid-aio (8.2) stable; urgency=low
     and requires an internet connection at that point
   * Rename "Healthchecks" section title to "Healthchecks.io"
   * Add hint on spindown option that hd-idle is not installed automatically
+  * Add confirmation prompt on Schedule button warning that the array must
+    be synced at least once before scheduling the AIO script
 
  -- auanasgheps <auanasgheps@users.noreply.github.com>  Wed, 02 Jul 2026 00:00:00 +0000
 

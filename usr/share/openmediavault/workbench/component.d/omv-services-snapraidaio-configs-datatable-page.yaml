@@ -44,6 +44,9 @@ data:
         enabledConstraints:
           minSelected: 1
           maxSelected: 1
+        confirmationDialogConfig:
+          template: confirmation
+          message: _("Before scheduling, make sure the array has been synced at least once. Use Tools → Sync to perform the initial sync for a new array.")
         execute:
           type: url
           url: "/services/snapraidaio/configs/schedule/{{ _selected[0].uuid }}"
