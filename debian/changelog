@@ -1,30 +1,3 @@
-openmediavault-snapraid-aio (8.2) stable; urgency=low
-
-  * Fix per-array state file collision: SYNC_WARN_FILE and SCRUB_COUNT_FILE
-    are now written to /var/lib/snapraidaio/<uuid>.warnCount and
-    /var/lib/snapraidaio/<uuid>.scrubCount instead of /usr/sbin/, so
-    sync-warn and scrub-delay counters are isolated per array
-  * Fix TMP_OUTPUT collision on concurrent runs: now /tmp/snapRAID-<uuid>.out
-    instead of the shared /tmp/snapRAID.out
-  * Create /var/lib/snapraidaio/ on install via postinst
-  * Remove per-array state files when a config is deleted
-  * Remove /var/lib/snapraidaio/ on package purge
-  * Clarify in UI hints that hook_notification, before_hook_cmd, and
-    after_hook_cmd run as root; note that snapraid_log_dir expects an
-    absolute path
-  * Fix add_del_threshold maximum: corrected from 10 to 1.0 in RPC schema
-    and datamodel; update UI hint to show valid range 0.0–1.0
-  * Fix healthchecks_id UI hint: clarify that only the UUID should be
-    entered, not the full ping URL
-  * Fix snapraid_conf: mark as required in the UI form and enforce
-    minLength: 1 in the RPC schema so an empty array selection is rejected
-  * Fix postinst: remove || : so Salt deployment failures surface as
-    package install errors instead of being silently ignored
-  * Fix getContainers: restrict to OMV_ROLE_ADMINISTRATOR; previously
-    any authenticated user could enumerate Docker container names and images
-
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 03 Jul 2026 00:00:00 +0000
-
 openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Replace global enable toggle with per-config Schedule button on the
     datatable; each config gets its own cron entry via OMV's Cron RPC;
@@ -85,8 +58,16 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix enumerateConfigFiles: wrap buildLabelMap() in try/catch so a missing
     /etc/snapraid directory returns an empty list instead of an RPC error dialog
   * Delete /etc/snapraid-aio-*.conf files on package purge
+  * Fix per-array state file isolation: sync-warn and scrub-delay counters
+    are now stored in /var/lib/snapraidaio/ per config UUID, preventing
+    collisions when multiple arrays run concurrently
+  * Fix add_del_threshold valid range: corrected maximum from 10 to 1.0
+  * Fix getContainers RPC: restrict to administrator role
+  * Clarify UI hints for hook commands (run as root), log dir (absolute path),
+    and healthchecks_id (UUID only, not full URL)
+  * Fix snapraid_conf: enforce required selection in form and RPC schema
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jun 2026 00:00:00 +0000
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Jul 2026 00:00:00 +0000
 
 openmediavault-snapraid-aio (8.0) stable; urgency=low
 

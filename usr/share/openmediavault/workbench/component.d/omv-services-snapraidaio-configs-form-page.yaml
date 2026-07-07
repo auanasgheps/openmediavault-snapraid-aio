@@ -187,8 +187,9 @@ data:
         label: _("Add/Delete ratio threshold")
         value: 0
         min: 0
+        max: 1
         step: 0.01
-        hint: _("Allow sync even if delete threshold is exceeded, if enough files were also added. 0 disables. Range: 0.0–1.0. Example&colon; 0.76 means at least 76% of deleted files must have a matching add.")
+        hint: _("Allow sync even if delete threshold is exceeded, if enough files were also added. 0 disables. Range&colon; 0.0–1.0. Example&colon; 0.76 means at least 76% of deleted files must have a matching add.")
       - type: numberInput
         name: sync_warn_threshold
         label: _("Sync warning threshold")
