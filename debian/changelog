@@ -61,7 +61,7 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Fix per-array state file isolation: sync-warn and scrub-delay counters
     are now stored in /var/lib/snapraidaio/ per config UUID, preventing
     collisions when multiple arrays run concurrently
-  * Fix add_del_threshold valid range: corrected maximum from 10 to 1.0
+  * Fix add_del_threshold valid range: corrected maximum to 1.0 in schema and enforce it in the UI form
   * Fix getContainers RPC: restrict to administrator role
   * Clarify UI hints for hook commands (run as root), log dir (absolute path),
     and healthchecks_id (UUID only, not full URL)
