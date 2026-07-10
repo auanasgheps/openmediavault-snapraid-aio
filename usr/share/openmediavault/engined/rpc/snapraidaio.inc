@@ -583,7 +583,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         foreach (explode(",", $config["apprise_url"]) as $url) {
             $url = trim($url);
             if (empty($url)) continue;
-            $proc = new \OMV\System\Process([$appriseBin, "-t", $subject, "-b", $body, $url]);
+            $proc = new \OMV\System\Process([$appriseBin, "-t", escapeshellarg($subject), "-b", escapeshellarg($body), escapeshellarg($url)]);
             $proc->setRedirect2to1(true);
             $proc->setQuiet(true);
             $output = [];
@@ -603,7 +603,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             throw new \OMV\Exception("Apprise email is not enabled or has no URL configured.");
         }
         $proc = new \OMV\System\Process([
-            $appriseBin, "-i", "html", "-t", $subject, "-b", $body, $config["apprise_email_url"]
+            $appriseBin, "-i", "html", "-t", escapeshellarg($subject), "-b", escapeshellarg($body), escapeshellarg($config["apprise_email_url"])
         ]);
         $proc->setRedirect2to1(true);
         $proc->setQuiet(true);
