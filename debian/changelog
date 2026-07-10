@@ -69,10 +69,13 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add Last Run column to config list datatable: shows timestamp and
     outcome (OK / WARNING / Started) of the most recent AIO script run
     for each array, parsed from /var/log/snapraid.log
+  * Add openmediavault-snapraid to Depends: OMV does not install Recommends,
+    and the plugin is non-functional without the OMV SnapRAID plugin
   * Add Test Apprise and Test Apprise email buttons to config form: test
     each notification channel directly from the saved config without
     running the full AIO script; multiple Apprise URLs are each tested
-    independently with per-URL error reporting
+    independently with per-URL error reporting; broken Apprise Python
+    environment is detected and reported with a clear reinstall message
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Jul 2026 00:00:00 +0000
 

@@ -12,6 +12,7 @@ Depends: bc,
          curl,
          jq,
          openmediavault (>= 8),
+         openmediavault-snapraid,
          python3-markdown,
          snapraid (>= 12)
 Description: SnapRAID AIO plugin for OpenMediaVault

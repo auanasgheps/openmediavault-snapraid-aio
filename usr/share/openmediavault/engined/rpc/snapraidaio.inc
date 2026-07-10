@@ -552,6 +552,19 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             );
         }
 
+        $verifyProc = new \OMV\System\Process([$appriseBin, "--version"]);
+        $verifyProc->setRedirect2to1(true);
+        $verifyProc->setQuiet(true);
+        $verifyOutput = [];
+        $verifyProc->execute($verifyOutput, $verifyExitCode);
+        if ($verifyExitCode !== 0) {
+            throw new \OMV\Exception(
+                "Apprise is installed but its Python environment is broken (ModuleNotFoundError). " .
+                "Re-run the AIO script to reinstall it: %s",
+                implode(" ", $verifyOutput)
+            );
+        }
+
         $subject = "SnapRAID AIO \u{2014} test notification";
         $body    = "This is a test notification from SnapRAID AIO.";
 
