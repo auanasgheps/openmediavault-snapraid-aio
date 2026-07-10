@@ -69,6 +69,10 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add Last Run column to config list datatable: shows timestamp and
     outcome (OK / WARNING / Started) of the most recent AIO script run
     for each array, parsed from /var/log/snapraid.log
+  * Fix apprise_url and apprise_email_url not persisting in form: switch
+    modifier from disabled to hidden so the fields remain in the Angular
+    form model when the channel toggle is off, matching the pattern used
+    by email_sender and email_receiver
   * Add openmediavault-snapraid to Depends: OMV does not install Recommends,
     and the plugin is non-functional without the OMV SnapRAID plugin
   * Add Test Apprise and Test Apprise email buttons to config form: test

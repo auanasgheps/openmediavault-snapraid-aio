@@ -111,7 +111,7 @@ data:
             value: []
             hint: _("Enter each Apprise URL and press Enter to add it. Multiple services are supported. Refer to the <a href='https://appriseit.com/services/' target='_blank'>Apprise services page</a> for URL format and configuration examples.")
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
@@ -143,7 +143,7 @@ data:
             value: ""
             hint: _("Apprise email service URL. Refer to the <a href='https://appriseit.com/services/email/' target='_blank'>Apprise email documentation</a> for SMTP and provider URL format examples.")
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
