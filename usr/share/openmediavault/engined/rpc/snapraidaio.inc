@@ -95,13 +95,11 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $object = new \OMV\Config\ConfigObject("conf.service.snapraidaio.config");
             $result = $object->getAssoc();
             // Ensure the sentinel UUID is returned so the form can POST it back.
-            $result["uuid"]       = $params["uuid"];
-            $result["services"]   = [];
-            $result["apprise_url"] = [];
+            $result["uuid"]     = $params["uuid"];
+            $result["services"] = [];
         } else {
             $result = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
-            $result["services"]   = strlen($result["services"])   ? explode(",", $result["services"])   : [];
-            $result["apprise_url"] = strlen($result["apprise_url"]) ? explode(",", $result["apprise_url"]) : [];
+            $result["services"] = strlen($result["services"]) ? explode(",", $result["services"]) : [];
         }
         $emailCfg = $db->getAssoc("conf.system.notification.email");
         $result["email_sender"]   = $emailCfg["sender"]       ?? "";
@@ -123,9 +121,6 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $params["services"] = implode(",", $params["services"]);
         } else {
             $params["services"] = "";
-        }
-        if (isset($params["apprise_url"]) && is_array($params["apprise_url"])) {
-            $params["apprise_url"] = implode(",", $params["apprise_url"]);
         }
         unset($params["email_sender"]);
         unset($params["email_receiver"]);
@@ -585,7 +580,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             throw new \OMV\Exception("Apprise is not enabled or has no URLs configured.");
         }
         $errors = [];
-        foreach ($config["apprise_url"] as $url) {
+        foreach (explode(",", $config["apprise_url"]) as $url) {
             $url = trim($url);
             if (empty($url)) continue;
             $proc = new \OMV\System\Process([$appriseBin, "-t", $subject, "-b", $body, $url]);
