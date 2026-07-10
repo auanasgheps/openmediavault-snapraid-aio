@@ -560,7 +560,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             );
         }
 
-        $subject = "SnapRAID AIO \u{2014} test notification";
+        $subject = "SnapRAID AIO - test notification";
         $body    = "This is a test notification from SnapRAID AIO.";
 
         if ($params["channel"] === "apprise") {

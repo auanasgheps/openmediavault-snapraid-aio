@@ -79,6 +79,8 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     running the full AIO script; multiple Apprise URLs are each tested
     independently with per-URL error reporting; broken Apprise Python
     environment is detected and reported with a clear reinstall message
+  * Fix test notification subject: replace em dash with plain hyphen to
+    avoid truncation on services that do not handle Unicode in titles
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Jul 2026 00:00:00 +0000
 
