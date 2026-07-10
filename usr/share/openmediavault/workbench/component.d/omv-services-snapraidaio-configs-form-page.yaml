@@ -108,7 +108,7 @@ data:
           - type: tagInput
             name: apprise_url
             label: _("Apprise URLs")
-            value: ""
+            value: []
             hint: _("Enter each Apprise URL and press Enter to add it. Multiple services are supported. Refer to the <a href='https://appriseit.com/services/' target='_blank'>Apprise services page</a> for URL format and configuration examples.")
             modifiers:
               - type: disabled
