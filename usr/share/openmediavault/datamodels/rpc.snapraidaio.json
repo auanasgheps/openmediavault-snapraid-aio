@@ -166,15 +166,6 @@
         "services": {
           "type": "string"
         },
-        "docker_remote": {
-          "type": "boolean"
-        },
-        "docker_user": {
-          "type": "string"
-        },
-        "docker_host_services": {
-          "type": "string"
-        },
         "docker_delay": {
           "type": "integer",
           "minimum": 0,

@@ -79,7 +79,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     running the full AIO script; multiple Apprise URLs are each tested
     independently with per-URL error reporting; broken Apprise Python
     environment is detected and reported with a clear reinstall message
-  * Fix test notification subject: replace em dash with plain hyphen to
+  * Remove dead docker_remote, docker_user, docker_host_services fields
+    from datamodel and RPC schema; remote Docker management is not exposed
+    in the UI and the template hardcodes these values disabled
     avoid truncation on services that do not handle Unicode in titles
   * Fix test notification subject/body truncation: escapeshellarg subject,
     body, and URL arguments passed to Apprise via OMV\System\Process, which
