@@ -66,6 +66,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Clarify UI hints for hook commands (run as root), log dir (absolute path),
     and healthchecks_id (UUID only, not full URL)
   * Fix snapraid_conf: enforce required selection in form and RPC schema
+  * Add Last Run column to config list datatable: shows timestamp and
+    outcome (OK / WARNING / Started) of the most recent AIO script run
+    for each array, parsed from /var/log/snapraid.log
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Jul 2026 00:00:00 +0000
 

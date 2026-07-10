@@ -6,7 +6,7 @@ data:
   config:
     autoReload: false
     hasSearchField: true
-    stateId: 1a3f9d40-5c2e-4b87-a1f6-8e7c0d3a9b52
+    stateId: 2b4e8f51-6d3a-5c98-b2e7-9f8d1e4b0c63
     sorters:
       - dir: asc
         prop: array_name
@@ -25,6 +25,10 @@ data:
         flexGrow: 1
         sortable: true
         cellTemplateName: checkIcon
+      - name: _("Last Run")
+        prop: last_run
+        flexGrow: 1
+        sortable: true
       - name: _("Config File")
         prop: snapraid_conf
         flexGrow: 2

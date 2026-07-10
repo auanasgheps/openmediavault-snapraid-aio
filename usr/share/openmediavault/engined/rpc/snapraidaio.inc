@@ -53,6 +53,12 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         } catch (\Exception $e) {
             $labelMap = [];
         }
+        $uuids = array_column($objects, 'uuid');
+        try {
+            $lastRunMap = $this->getLastRunStatuses($uuids);
+        } catch (\Exception $e) {
+            $lastRunMap = array_fill_keys($uuids, '');
+        }
         foreach ($objects as &$obj) {
             $obj["array_name"] = $labelMap[$obj["snapraid_conf"]] ?? "";
             if (!empty($obj["cron_uuid"])) {
@@ -67,6 +73,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             } else {
                 $obj["scheduled"] = false;
             }
+            $obj["last_run"] = $lastRunMap[$obj["uuid"]] ?? '';
         }
         unset($obj);
         // Filter the result.
@@ -232,6 +239,78 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
     private function getAioConfPath($uuid)
     {
         return sprintf("/etc/snapraid-aio-%s.conf", $uuid);
+    }
+
+    // Returns ["uuid" => "YYYY-MM-DD HH:MM — OK|WARNING|Started"] for each UUID.
+    // Reads /var/log/snapraid.log once and scans for the last run start per UUID.
+    // "Started" means the run began but no completion line was found — could be
+    // currently running or an aborted/failed run.
+    private function getLastRunStatuses($uuids)
+    {
+        $result = array_fill_keys($uuids, '');
+        $logFile = "/var/log/snapraid.log";
+        if (!is_readable($logFile)) {
+            return $result;
+        }
+        $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines === false) {
+            return $result;
+        }
+        $uuidSet = array_flip($uuids);
+        // Forward pass: record index of last start line seen for each UUID.
+        $lastStartIdx = [];
+        $lastStartTs  = [];
+        foreach ($lines as $i => $line) {
+            if (strpos($line, 'Using configuration file: /etc/snapraid-aio-') === false) {
+                continue;
+            }
+            if (!preg_match('~snapraid-aio-([0-9a-f\-]{36})\.conf~', $line, $m)) {
+                continue;
+            }
+            $uuid = $m[1];
+            if (!isset($uuidSet[$uuid])) {
+                continue;
+            }
+            $lastStartIdx[$uuid] = $i;
+            // Timestamp is the leading "[YYYY-MM-DD HH:MM" portion of the line.
+            $ts = '';
+            if (preg_match('/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2})/', $line, $tm)) {
+                $ts = $tm[1];
+            }
+            $lastStartTs[$uuid] = $ts;
+        }
+        // For each UUID with a known start, scan its run range for completion/warnings.
+        $total = count($lines);
+        foreach ($lastStartIdx as $uuid => $startIdx) {
+            // Find end boundary: next start line after $startIdx, or EOF.
+            $endIdx = $total;
+            for ($j = $startIdx + 1; $j < $total; $j++) {
+                if (strpos($lines[$j], 'Using configuration file: /etc/snapraid-aio-') !== false) {
+                    $endIdx = $j;
+                    break;
+                }
+            }
+            $completed = false;
+            $hasWarn   = false;
+            for ($j = $startIdx + 1; $j < $endIdx; $j++) {
+                if (!$completed && strpos($lines[$j], 'Total time elapsed for SnapRAID') !== false) {
+                    $completed = true;
+                }
+                if (!$hasWarn && strpos($lines[$j], ': WARN: \'') !== false) {
+                    $hasWarn = true;
+                }
+            }
+            if (!$completed) {
+                $status = 'Started';
+            } elseif ($hasWarn) {
+                $status = 'WARNING';
+            } else {
+                $status = 'OK';
+            }
+            $ts = $lastStartTs[$uuid];
+            $result[$uuid] = $ts ? sprintf("%s \u{2014} %s", $ts, $status) : $status;
+        }
+        return $result;
     }
 
     // Build a [realpath => label] map from /etc/snapraid/ symlinks.
