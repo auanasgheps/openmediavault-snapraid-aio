@@ -428,3 +428,33 @@ data:
         execute:
           type: url
           url: "/services/snapraidaio/configs"
+      - text: _("Test Apprise")
+        enabledConstraint:
+          operator: truthy
+          arg0:
+            prop: apprise
+        execute:
+          type: request
+          request:
+            service: SnapRaidAio
+            method: testNotification
+            params:
+              uuid: "{{ _routeParams.uuid }}"
+              channel: "apprise"
+            progressMessage: _("Sending Apprise test notification ...")
+            successNotification: _("Apprise test notification sent. Check your configured services.")
+      - text: _("Test Apprise email")
+        enabledConstraint:
+          operator: truthy
+          arg0:
+            prop: apprise_email
+        execute:
+          type: request
+          request:
+            service: SnapRaidAio
+            method: testNotification
+            params:
+              uuid: "{{ _routeParams.uuid }}"
+              channel: "apprise_email"
+            progressMessage: _("Sending Apprise email test ...")
+            successNotification: _("Apprise email test sent. Check your inbox.")

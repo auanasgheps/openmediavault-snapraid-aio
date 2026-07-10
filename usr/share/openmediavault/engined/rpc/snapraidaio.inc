@@ -37,6 +37,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->registerMethod("getSchedule");
         $this->registerMethod("setSchedule");
         $this->registerMethod("executeCommand");
+        $this->registerMethod("testNotification");
     }
 
     public function getConfigList($params, $context)
@@ -521,5 +522,59 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $this->exec($cmdLine, $output, $bgOutputFilename);
             return $output;
         });
+    }
+
+    public function testNotification($params, $context)
+    {
+        $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
+        $this->validateMethodParams($params, "rpc.snapraidaio.testnotification");
+
+        $config = $this->callMethod("getConfig", ["uuid" => $params["uuid"]], $context);
+
+        $appriseBin = trim(shell_exec("command -v apprise 2>/dev/null") ?: "");
+        if (empty($appriseBin)) {
+            $appriseBin = "/root/.local/bin/apprise";
+        }
+        if (!is_executable($appriseBin)) {
+            throw new \OMV\Exception(
+                "Apprise binary not found. Run the AIO script at least once to auto-install it."
+            );
+        }
+
+        $subject = "SnapRAID AIO \u{2014} test notification";
+        $body    = "This is a test notification from SnapRAID AIO.";
+
+        if ($params["channel"] === "apprise") {
+            if (empty($config["apprise"]) || empty($config["apprise_url"])) {
+                throw new \OMV\Exception("Apprise is not enabled or has no URLs configured.");
+            }
+            $urls   = array_filter(array_map("trim", explode(",", $config["apprise_url"])));
+            $errors = [];
+            foreach ($urls as $url) {
+                $proc = new \OMV\System\Process([$appriseBin, "-t", $subject, "-b", $body, $url]);
+                $proc->setRedirect2to1(true);
+                $proc->execute($output, $exitCode);
+                if ($exitCode !== 0) {
+                    $errors[] = sprintf("URL '%s' failed: %s", $url, implode("\n", $output));
+                }
+            }
+            if (!empty($errors)) {
+                throw new \OMV\Exception(implode("\n", $errors));
+            }
+        } elseif ($params["channel"] === "apprise_email") {
+            if (empty($config["apprise_email"]) || empty($config["apprise_email_url"])) {
+                throw new \OMV\Exception("Apprise email is not enabled or has no URL configured.");
+            }
+            $proc = new \OMV\System\Process([
+                $appriseBin, "-i", "html", "-t", $subject, "-b", $body, $config["apprise_email_url"]
+            ]);
+            $proc->setRedirect2to1(true);
+            $proc->execute($output, $exitCode);
+            if ($exitCode !== 0) {
+                throw new \OMV\Exception(
+                    sprintf("Apprise email failed: %s", implode("\n", $output))
+                );
+            }
+        }
     }
 }

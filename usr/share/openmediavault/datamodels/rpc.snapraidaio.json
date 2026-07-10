@@ -207,5 +207,24 @@
         }
       }
     }
+  },
+  {
+    "type": "rpc",
+    "id": "rpc.snapraidaio.testnotification",
+    "params": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "format": "uuidv4",
+          "required": true
+        },
+        "channel": {
+          "type": "string",
+          "enum": ["apprise", "apprise_email"],
+          "required": true
+        }
+      }
+    }
   }
 ]
