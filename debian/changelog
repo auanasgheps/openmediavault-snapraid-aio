@@ -72,6 +72,10 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add Test Apprise and Test Apprise email buttons to config form: sends
     a test notification directly via the saved Apprise URL(s) or Apprise
     email URL without invoking the AIO script
+  * Fix apprise_url tagInput round-trip: add implode/explode transforms
+    in setConfig/getConfig so multiple URLs are stored and restored correctly
+  * Fix testNotification: show clear error when config is not yet saved;
+    fix multi-URL error collection (setQuiet + $output reset per iteration)
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Jul 2026 00:00:00 +0000
 

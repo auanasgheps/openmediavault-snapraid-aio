@@ -95,11 +95,13 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $object = new \OMV\Config\ConfigObject("conf.service.snapraidaio.config");
             $result = $object->getAssoc();
             // Ensure the sentinel UUID is returned so the form can POST it back.
-            $result["uuid"]     = $params["uuid"];
-            $result["services"] = [];
+            $result["uuid"]       = $params["uuid"];
+            $result["services"]   = [];
+            $result["apprise_url"] = [];
         } else {
             $result = $db->getAssoc("conf.service.snapraidaio.config", $params["uuid"]);
-            $result["services"] = strlen($result["services"]) ? explode(",", $result["services"]) : [];
+            $result["services"]   = strlen($result["services"])   ? explode(",", $result["services"])   : [];
+            $result["apprise_url"] = strlen($result["apprise_url"]) ? explode(",", $result["apprise_url"]) : [];
         }
         $emailCfg = $db->getAssoc("conf.system.notification.email");
         $result["email_sender"]   = $emailCfg["sender"]       ?? "";
@@ -121,6 +123,9 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $params["services"] = implode(",", $params["services"]);
         } else {
             $params["services"] = "";
+        }
+        if (isset($params["apprise_url"]) && is_array($params["apprise_url"])) {
+            $params["apprise_url"] = implode(",", $params["apprise_url"]);
         }
         unset($params["email_sender"]);
         unset($params["email_receiver"]);
@@ -529,6 +534,12 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
         $this->validateMethodParams($params, "rpc.snapraidaio.testnotification");
 
+        if ($params["uuid"] === \OMV\Environment::get("OMV_CONFIGOBJECT_NEW_UUID")) {
+            throw new \OMV\Exception(
+                "Save the configuration first before sending a test notification."
+            );
+        }
+
         $config = $this->callMethod("getConfig", ["uuid" => $params["uuid"]], $context);
 
         $appriseBin = trim(shell_exec("command -v apprise 2>/dev/null") ?: "");
@@ -548,11 +559,14 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             if (empty($config["apprise"]) || empty($config["apprise_url"])) {
                 throw new \OMV\Exception("Apprise is not enabled or has no URLs configured.");
             }
-            $urls   = array_filter(array_map("trim", explode(",", $config["apprise_url"])));
             $errors = [];
-            foreach ($urls as $url) {
+            foreach ($config["apprise_url"] as $url) {
+                $url = trim($url);
+                if (empty($url)) continue;
                 $proc = new \OMV\System\Process([$appriseBin, "-t", $subject, "-b", $body, $url]);
                 $proc->setRedirect2to1(true);
+                $proc->setQuiet(true);
+                $output = [];
                 $proc->execute($output, $exitCode);
                 if ($exitCode !== 0) {
                     $errors[] = sprintf("URL '%s' failed: %s", $url, implode("\n", $output));
@@ -569,6 +583,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                 $appriseBin, "-i", "html", "-t", $subject, "-b", $body, $config["apprise_email_url"]
             ]);
             $proc->setRedirect2to1(true);
+            $proc->setQuiet(true);
+            $output = [];
             $proc->execute($output, $exitCode);
             if ($exitCode !== 0) {
                 throw new \OMV\Exception(
