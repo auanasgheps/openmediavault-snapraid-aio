@@ -17,17 +17,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     resolve symlinks to stable UUID-based paths; hide legacy symlink
   * Switch Apprise URL field to tagInput: supports multiple URLs as chips
   * Disable Telegram and Discord integrations (superseded by Apprise)
-  * Fix per-array state file isolation: sync-warn and scrub-delay counters
-    stored per config UUID, preventing collisions across concurrent runs
-  * Fix apprise_url not persisting in form: tagInput expects a
-    comma-separated string; corrected round-trip in getConfig/setConfig
-  * Fix test notification argument quoting: escapeshellarg subject, body,
-    and URL to prevent word-splitting by the shell
-  * Fix add_del_threshold valid range: maximum corrected to 1.0
-  * Fix deleteConfig: remove conf file and linked cron entry on delete
   * Delete /etc/snapraid-aio-*.conf files on package purge
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Jul 2026 00:00:00 +0000
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 13 Jul 2026 00:00:00 +0000
 
 openmediavault-snapraid-aio (8.0) stable; urgency=low
 
