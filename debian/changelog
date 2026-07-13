@@ -1,94 +1,31 @@
 openmediavault-snapraid-aio (8.1) stable; urgency=low
-  * Replace global enable toggle with per-config Schedule button on the
-    datatable; each config gets its own cron entry via OMV's Cron RPC;
-    cron_uuid stored per-config so the schedule round-trips correctly
-  * Remove Settings page, Settings navigation entry, and global enable field
-  * Add Tools submenu to configs datatable: Force Sync (runs AIO script with
-    --force-sync, bypasses delete/update thresholds, requires confirmation) and
-    Sync (runs snapraid sync directly on the array); both stream output live
-    via taskDialog
-  * Add Run Now action to Tools submenu: runs the full AIO script for the
-    selected config (equivalent to the cron job), output streamed via taskDialog
-  * Add Last Log action to Tools submenu: displays the most recent
-    SnapRAID-*.txt log file in the configured log dir (falls back to /root)
-  * Add email_notifications toggle: enable/disable native OMV email per config;
-    sender and receiver are pulled read-only from OMV system notification
-    settings and hidden in the form when the feature is off
-  * Add confirmation prompt on Schedule button warning that the array must
-    be synced at least once before scheduling the AIO script
-  * Change default schedule to midnight daily so users can adjust the time
-    immediately without switching execution type
-  * Improve SnapRAID array selector: show array name (label) instead of raw
-    config file path; resolve symlinks to stable UUID-based paths as stored
-    value; hide the /etc/snapraid.conf legacy symlink
-  * Add Array name column to config list table
-  * Add Scheduled column to config list table
-  * Switch Apprise URL field to tagInput: supports multiple URLs as chips,
-    empty value now correctly renders APPRISE_URL=() instead of APPRISE_URL=("")
-  * Disable Telegram and Discord integrations (superseded by Apprise)
-  * Pre-fill schedule comment with "SnapRAID AIO <array name>" on first-time creation
-  * Split UI threshold section into Sync thresholds, Scrub settings,
-    and SnapRAID options sections
-  * Add descriptive hints to fields that previously had none
-  * Fix misleading labels: force_zero, spindown, snap_status_notify,
-    apprise, apprise_email, execute_before_spindown, smart_log_notify
-  * Add info hint at top of config form linking to the AIO Script project page
-  * Add hint below SnapRAID array selector to guide users who see an empty
-    list to install the OMV SnapRAID plugin first
-  * Add hint on spindown option that hd-idle is not installed automatically
-  * Clarify in the UI that Apprise is auto-installed via pipx on first use
-    and requires an internet connection at that point
-  * Rename "Healthchecks" section title to "Healthchecks.io"
-  * Hardcode CHECK_UPDATES=0; updates ship with the package
-  * Fix APPRISE_URL rendered as Bash array in generated config file
-  * Fix custom hook fields: disable before/after hook inputs and
-    execute_before_spindown when custom_hook toggle is off
-  * Fix SNAPRAID_CONF template: use empty string default instead of
-    /etc/snapraid.conf so a missing array selection fails clearly at
-    script runtime rather than silently running against the wrong array
-  * Fix breadcrumb label: add parent route for /services/snapraidaio with
-    title "SnapRAID AIO" so the breadcrumb shows "SnapRAID AIO" instead of
-    the raw URL segment "Snapraidaio"
-  * Fix executeCommand: guard empty snapraid_conf in sync case with a clear
-    error message instead of passing -c "" to the snapraid binary
-  * Fix executeCommand: check AIO config file exists before invoking
-    run/force-sync and surface a clear "apply settings first" error
-  * Fix deleteConfig: remove /etc/snapraid-aio-<uuid>.conf and linked cron entry
-  * Fix Salt deploy exit code 1 when all AIO configs are deleted (add noop state)
-  * Fix enumerateConfigFiles: wrap buildLabelMap() in try/catch so a missing
-    /etc/snapraid directory returns an empty list instead of an RPC error dialog
-  * Delete /etc/snapraid-aio-*.conf files on package purge
-  * Fix per-array state file isolation: sync-warn and scrub-delay counters
-    are now stored in /var/lib/snapraidaio/ per config UUID, preventing
-    collisions when multiple arrays run concurrently
-  * Fix add_del_threshold valid range: corrected maximum to 1.0 in schema and enforce it in the UI form
-  * Fix getContainers RPC: restrict to administrator role
-  * Clarify UI hints for hook commands (run as root), log dir (absolute path),
-    and healthchecks_id (UUID only, not full URL)
-  * Fix snapraid_conf: enforce required selection in form and RPC schema
-  * Add Last Run column to config list datatable: shows timestamp and
-    outcome (OK / WARNING / Started) of the most recent AIO script run
-    for each array, parsed from /var/log/snapraid.log
-  * Fix apprise_url not persisting in form: tagInput expects a
-    comma-separated string, not an array; remove explode in getConfig
-    and implode guard in setConfig for apprise_url
-  * Add openmediavault-snapraid to Depends: OMV does not install Recommends,
-    and the plugin is non-functional without the OMV SnapRAID plugin
+
+  * Add per-config scheduling: Schedule button on datatable, each config
+    gets its own cron entry; removes global enable toggle and Settings page
+  * Add Tools submenu: Sync, Force Sync, Run Now, and Last Log actions;
+    Sync and Force Sync run snapraid directly; Run Now and Last Log use
+    the AIO script; all stream output live via taskDialog
+  * Add Last Run column to config list datatable: timestamp and outcome
+    (OK / WARNING / Started) parsed from /var/log/snapraid.log
+  * Add email_notifications toggle per config: sender and receiver pulled
+    read-only from OMV system notification settings
   * Add Test Apprise and Test Apprise email buttons to config form: test
-    each notification channel directly from the saved config without
-    running the full AIO script; multiple Apprise URLs are each tested
-    independently with per-URL error reporting; broken Apprise Python
-    environment is detected and reported with a clear reinstall message
-  * Remove dead docker_remote, docker_user, docker_host_services fields
-    from datamodel and RPC schema; remote Docker management is not exposed
-    in the UI and the template hardcodes these values disabled
-  * Fix SNAPRAID_LOG_DIR template: use empty string default instead of
-    $HOME so a blank log dir field generates SNAPRAID_LOG_DIR="" and the
-    AIO script applies its own default, consistent with the datamodel
-    avoid truncation on services that do not handle Unicode in titles
-  * Fix test notification subject/body truncation: escapeshellarg subject,
-    body, and URL arguments passed to Apprise via OMV\System\Process, which
-    does not shell-escape array elements before joining them
+    each notification channel directly from the saved config
+  * Add openmediavault-snapraid to Depends: plugin is non-functional
+    without the OMV SnapRAID plugin
+  * Improve SnapRAID array selector: show array name instead of raw path;
+    resolve symlinks to stable UUID-based paths; hide legacy symlink
+  * Switch Apprise URL field to tagInput: supports multiple URLs as chips
+  * Disable Telegram and Discord integrations (superseded by Apprise)
+  * Fix per-array state file isolation: sync-warn and scrub-delay counters
+    stored per config UUID, preventing collisions across concurrent runs
+  * Fix apprise_url not persisting in form: tagInput expects a
+    comma-separated string; corrected round-trip in getConfig/setConfig
+  * Fix test notification argument quoting: escapeshellarg subject, body,
+    and URL to prevent word-splitting by the shell
+  * Fix add_del_threshold valid range: maximum corrected to 1.0
+  * Fix deleteConfig: remove conf file and linked cron entry on delete
+  * Delete /etc/snapraid-aio-*.conf files on package purge
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 07 Jul 2026 00:00:00 +0000
 
