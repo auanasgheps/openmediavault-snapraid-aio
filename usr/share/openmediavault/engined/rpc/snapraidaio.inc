@@ -134,10 +134,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $object = $db->get("conf.service.snapraidaio.config", $params["uuid"]);
         }
         $object->setAssoc($params);
-        if ($isNew) {
-            // Check uniqueness - config file
-            $db->assertIsUnique($object, "snapraid_conf");
-        }
+        // Check uniqueness on both create and edit.
+        $db->assertIsUnique($object, "snapraid_conf");
         $db->set($object);
         // Return the configuration object.
         return $object->getAssoc();
@@ -226,7 +224,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                 if (empty($cnt)) {
                     continue;
                 }
-                $parts = explode(",", $cnt);
+                $parts = explode(",", $cnt, 3);
                 $objects[] = [
                     "image" => $parts[0],
                     "name" => $parts[1],
@@ -423,16 +421,20 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $cronParams["everynhour"]       = false;
         $cronParams["everyndayofmonth"] = false;
         // Cron::set expects time fields as arrays for 'exactly' execution.
+        // Split on comma first to correctly restore multi-value fields that
+        // getSchedule flattened with implode (e.g. ["0","30"] → "0,30" → ["0","30"]).
         foreach (["minute", "hour", "dayofmonth", "month", "dayofweek"] as $field) {
             if (isset($cronParams[$field]) && !is_array($cronParams[$field])) {
-                $cronParams[$field] = [$cronParams[$field]];
+                $cronParams[$field] = array_map('trim', explode(",", $cronParams[$field]));
             }
         }
         // Save the cron entry and retrieve its UUID (new on first save).
         try {
             $cronResult = \OMV\Rpc\Rpc::call("Cron", "set", $cronParams, $context);
         } catch (\Exception $e) {
-            if ($isNewCron) {
+            // Only retry when we had a stored UUID that turned out stale.
+            // Re-throw immediately for new entries or any non-"not found" error.
+            if ($isNewCron || stripos($e->getMessage(), "not found") === false) {
                 throw $e;
             }
             // Stale UUID — the cron entry no longer exists; create a new one instead.
@@ -497,7 +499,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                     }
                     $cmdArgs = [
                         "/usr/bin/snapraid",
-                        "sync", "-c", $snapraidConf
+                        "sync", "-c", escapeshellarg($snapraidConf)
                     ];
                     break;
                 case "last-log":
@@ -507,13 +509,20 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                     if (empty($logDir) || strpos($logDir, '$') !== false) {
                         $logDir = "/root";
                     }
+                    // Reject paths that are not absolute or contain traversal sequences.
+                    if ($logDir[0] !== '/' || strpos($logDir, '..') !== false) {
+                        throw new \OMV\Exception(gettext(
+                            "Invalid log directory: path must be absolute and contain no '..' components."
+                        ));
+                    }
                     $files = glob($logDir . "/SnapRAID-*.txt");
                     if (empty($files)) {
-                        $cmdArgs = ["/bin/echo", "No log files found in " . $logDir . "."];
-                    } else {
-                        usort($files, fn($a, $b) => filemtime($b) - filemtime($a));
-                        $cmdArgs = ["/bin/cat", $files[0]];
+                        file_put_contents($bgOutputFilename,
+                            sprintf("No log files found in %s.\n", $logDir));
+                        return [];
                     }
+                    usort($files, fn($a, $b) => filemtime($b) - filemtime($a));
+                    $cmdArgs = ["/bin/cat", $files[0]];
                     break;
             }
             $cmd = new \OMV\System\Process($cmdArgs);
