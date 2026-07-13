@@ -82,6 +82,9 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Remove dead docker_remote, docker_user, docker_host_services fields
     from datamodel and RPC schema; remote Docker management is not exposed
     in the UI and the template hardcodes these values disabled
+  * Fix SNAPRAID_LOG_DIR template: use empty string default instead of
+    $HOME so a blank log dir field generates SNAPRAID_LOG_DIR="" and the
+    AIO script applies its own default, consistent with the datamodel
     avoid truncation on services that do not handle Unicode in titles
   * Fix test notification subject/body truncation: escapeshellarg subject,
     body, and URL arguments passed to Apprise via OMV\System\Process, which

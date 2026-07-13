@@ -61,7 +61,7 @@ SPINDOWN={{ 1 if (config.spindown | default(False) | to_bool) else 0 }}
 VERBOSITY={{ 1 if (config.verbosity | default(False) | to_bool) else 0 }}
 
 RETENTION_DAYS={{ config.retention_days | default(0) }}
-SNAPRAID_LOG_DIR="{{ config.snapraid_log_dir | default('$HOME', true) }}"
+SNAPRAID_LOG_DIR="{{ config.snapraid_log_dir | default('', true) }}"
 
 SMART_LOG={{ 1 if (config.smart_log | default(True) | to_bool) else 0 }}
 SMART_LOG_NOTIFY={{ 1 if (config.smart_log_notify | default(False) | to_bool) else 0 }}
