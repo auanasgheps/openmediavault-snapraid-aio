@@ -18,8 +18,11 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Switch Apprise URL field to tagInput: supports multiple URLs as chips
   * Disable Telegram and Discord integrations (superseded by Apprise)
   * Delete /etc/snapraid-aio-*.conf files on package purge
+  * Add confdb migration script for 8.1: removes stale enable, docker_local,
+    docker_remote, docker_user, docker_host_services nodes from existing DB
+    entries to prevent Salt rendering failures on upgrade
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 13 Jul 2026 00:00:00 +0000
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 14 Jul 2026 00:00:00 +0000
 
 openmediavault-snapraid-aio (8.0) stable; urgency=low
 
