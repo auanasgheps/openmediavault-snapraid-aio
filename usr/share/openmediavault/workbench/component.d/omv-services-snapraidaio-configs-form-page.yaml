@@ -195,6 +195,11 @@ data:
         label: _("Sync warning threshold")
         value: -1
         hint: _("Number of times a threshold warning is issued before forcing a sync anyway. 0 = always force, -1 = never force.")
+      - type: textInput
+        name: ignore_pattern
+        label: _("Ignore pattern")
+        value: ""
+        hint: _("Advanced. Space-separated glob patterns to exclude from diff counts. Misuse will leave parity out of sync without warning — use SnapRAID's exclude configuration for files that change often. Example&colon; *.tmp /var/cache/* */backup/*")
 
       - type: divider
         title: _("Scrub settings")
@@ -292,12 +297,6 @@ data:
                   arg0:
                     prop: snap_status
 
-      - type: textInput
-        name: ignore_pattern
-        label: _("Ignore pattern")
-        value: ""
-        hint: _("Advanced. Space-separated glob patterns to exclude from diff counts. Misuse will leave parity out of sync without warning — use SnapRAID's exclude configuration for files that change often. Example&colon; *.tmp /var/cache/* */backup/*")
-
       - type: divider
         title: _("Docker and service management")
       - type: checkbox
@@ -330,8 +329,8 @@ data:
             get:
               method: getContainers
           sorters:
-            dir: asc
-            prop: name
+            - dir: asc
+              prop: name
         modifiers:
           - type: disabled
             constraint:

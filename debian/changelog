@@ -21,8 +21,10 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
   * Add confdb migration script for 8.1: removes stale enable, docker_local,
     docker_remote, docker_user, docker_host_services nodes from existing DB
     entries to prevent Salt rendering failures on upgrade
+  * Move ignore_pattern field to end of Sync Thresholds section
+  * Fix Docker container list sort order: sort alphabetically by name
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 14 Jul 2026 00:00:00 +0000
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 16 Jul 2026 00:00:00 +0000
 
 openmediavault-snapraid-aio (8.0) stable; urgency=low
 
