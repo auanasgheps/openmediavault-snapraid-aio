@@ -337,19 +337,6 @@ data:
               operator: falsy
               arg0:
                 prop: manage_services
-      - type: numberInput
-        name: docker_delay
-        label: _("Service start delay (seconds)")
-        value: 0
-        min: 0
-        hint: _("Seconds to wait after restarting services before continuing.")
-        modifiers:
-          - type: disabled
-            constraint:
-              operator: falsy
-              arg0:
-                prop: manage_services
-
       - type: divider
         title: _("Custom hooks")
       - type: checkbox

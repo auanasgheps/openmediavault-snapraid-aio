@@ -83,7 +83,6 @@ SERVICES="{{ config.services | default('', true) | replace(",", " ") }}"
 DOCKER_REMOTE=0
 DOCKER_USER=""
 DOCKER_HOST_SERVICES=()
-DOCKER_DELAY={{ config.docker_delay | default(0) }}
 
 ### CUSTOM HOOKS ###
 

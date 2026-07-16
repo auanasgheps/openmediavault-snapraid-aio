@@ -24,7 +24,7 @@ set -e
 # Remove fields dropped from the datamodel in 8.1.
 # Stale nodes in existing DB entries prevent Salt from rendering the config.
 xpath="//services/snapraidaio/configs/config"
-for field in enable docker_local docker_remote docker_user docker_host_services; do
+for field in enable docker_local docker_remote docker_user docker_host_services docker_delay; do
     omv_config_delete "${xpath}/${field}"
 done
 

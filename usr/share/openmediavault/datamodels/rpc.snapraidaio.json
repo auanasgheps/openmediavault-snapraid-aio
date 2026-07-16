@@ -166,12 +166,6 @@
         "services": {
           "type": "string"
         },
-        "docker_delay": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 3600,
-          "required": true
-        },
         "custom_hook": {
           "type": "boolean",
           "required": true

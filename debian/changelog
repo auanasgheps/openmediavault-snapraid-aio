@@ -23,6 +23,7 @@ openmediavault-snapraid-aio (8.1) stable; urgency=low
     entries to prevent Salt rendering failures on upgrade
   * Move ignore_pattern field to end of Sync Thresholds section
   * Fix Docker container list sort order: sort alphabetically by name
+  * Remove docker_delay field: only applied to remote Docker which is disabled
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 16 Jul 2026 00:00:00 +0000
 

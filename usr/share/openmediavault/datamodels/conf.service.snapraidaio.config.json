@@ -163,11 +163,6 @@
       "type": "string",
       "default": ""
     },
-    "docker_delay": {
-      "type": "integer",
-      "minimum": 0,
-      "default": 0
-    },
     "custom_hook": {
       "type": "boolean",
       "default": false
