@@ -77,7 +77,7 @@ data:
             name: healthchecks_id
             label: _("Healthchecks UUID")
             value: ""
-            hint: _("UUID only, e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx. Do not paste the full ping URL — the base URL above is added automatically.")
+            hint: _("UUID only, e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx. Do not paste the full ping URL — the base URL is added automatically.")
             modifiers:
               - type: disabled
                 constraint:
@@ -220,6 +220,7 @@ data:
         name: scrub_new
         label: _("Scrub new blocks after sync")
         value: false
+        hint: _("Immediately scrub newly synced blocks after each sync run. Increases runtime but catches errors on new data sooner.")
       - type: numberInput
         name: scrub_delayed_run
         label: _("Scrub delayed run")
@@ -261,7 +262,7 @@ data:
         name: snapraid_log_dir
         label: _("SnapRAID log directory")
         value: ""
-        hint: _("Absolute path to the directory for log files. Leave empty to use the home directory.")
+        hint: _("Absolute path to the directory for log files. Leave empty to use /root.")
 
       - type: container
         fields:
@@ -269,6 +270,7 @@ data:
             name: smart_log
             label: _("Log SMART data")
             value: true
+            hint: _("Run SnapRAID's SMART check and include the output in the log.")
           - type: checkbox
             name: smart_log_notify
             label: _("Include SMART data in notification")
@@ -286,6 +288,7 @@ data:
             name: snap_status
             label: _("Log SnapRAID status")
             value: false
+            hint: _("Run SnapRAID status after each sync and include the output in the log.")
           - type: checkbox
             name: snap_status_notify
             label: _("Include status in notification")
@@ -303,6 +306,7 @@ data:
         name: manage_services
         label: _("Manage Docker containers / services")
         value: false
+        hint: _("Stop or pause the selected Docker containers before SnapRAID runs and restart or unpause them when done. Prevents open file conflicts during sync.")
       - type: select
         name: docker_mode
         label: _("Docker mode")
@@ -323,6 +327,7 @@ data:
         multiple: true
         valueField: name
         textField: name
+        hint: _("Containers to stop or pause before SnapRAID runs. All selected containers are stopped or paused together.")
         store:
           proxy:
             service: SnapRaidAio
@@ -396,7 +401,7 @@ data:
 
       - type: checkbox
         name: execute_before_spindown
-        label: _("Execute after hook before spindown")
+        label: _("Run after-hook before spindown")
         value: false
         hint: _("Run the after hook before spinning down disks instead of after.")
         modifiers:
