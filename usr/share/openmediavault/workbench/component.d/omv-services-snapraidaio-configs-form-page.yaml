@@ -222,7 +222,7 @@ data:
         value: false
       - type: numberInput
         name: scrub_delayed_run
-        label: _("Scrub every N runs")
+        label: _("Scrub delayed run")
         value: 0
         min: 0
         hint: _("Run scrub only every N script executions. 0 = scrub every time.")
