@@ -23,6 +23,14 @@ snapraidaio_noop:
   cmd.run:
     - name: /bin/true
 
+create_snapraidaio_state_dir:
+  file.directory:
+    - name: /var/lib/snapraidaio
+    - user: root
+    - group: root
+    - mode: '0750'
+    - makedirs: True
+
 {% for conf in configs %}
 
 configure_snapraidaio_{{ conf.uuid }}_conf:
