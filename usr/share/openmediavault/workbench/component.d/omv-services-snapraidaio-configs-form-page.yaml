@@ -160,11 +160,11 @@ data:
                   arg0:
                     prop: apprise_email
 
-      - type: textArea
+      - type: textarea
         name: hook_notification
         label: _("Custom notification hook")
         value: ""
-        monospaced: true
+        monospace: true
         rows: 2
         hint: _("Legacy option, superseded by Apprise. Script or command called instead of the default email. SUBJECT and BODY are passed as parameters. Runs as root — enter only trusted commands.")
 
@@ -360,10 +360,10 @@ data:
               operator: falsy
               arg0:
                 prop: custom_hook
-      - type: textArea
+      - type: textarea
         name: before_hook_cmd
         label: _("Before hook command")
-        monospaced: true
+        monospace: true
         rows: 2
         value: ""
         hint: _("Shell command or script path. Runs as root before SnapRAID operations start — enter only trusted commands.")
@@ -385,10 +385,10 @@ data:
               operator: falsy
               arg0:
                 prop: custom_hook
-      - type: textArea
+      - type: textarea
         name: after_hook_cmd
         label: _("After hook command")
-        monospaced: true
+        monospace: true
         rows: 2
         value: ""
         hint: _("Shell command or script path. Runs as root after SnapRAID operations complete — enter only trusted commands.")

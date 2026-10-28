@@ -1,3 +1,11 @@
+openmediavault-snapraid-aio (8.2) stable; urgency=low
+
+  * Fix custom hook and notification textareas not rendering in the UI:
+    correct field type from textArea to textarea and property from
+    monospaced to monospace (fixes #2)
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 28 Oct 2026 00:00:00 +0000
+
 openmediavault-snapraid-aio (8.1) stable; urgency=low
 
   * Comprehensive update bringing full SnapRAID AIO Script functionality to the
