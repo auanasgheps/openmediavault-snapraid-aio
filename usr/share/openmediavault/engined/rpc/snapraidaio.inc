@@ -329,7 +329,6 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             if ($entry->isDot()) continue;
             if (!$entry->isLink()) continue;
             $path = $entry->getPathname();
-            if (basename($path) === "snapraid.conf") continue;
             if (!preg_match("/\.conf$/i", $path)) continue;
             $real = realpath($path);
             if ($real === false) continue;

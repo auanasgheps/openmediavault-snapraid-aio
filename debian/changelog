@@ -17,7 +17,6 @@ openmediavault-snapraid-aio (8.2) stable; urgency=low
     the cron task's enable property
   * Report WARNING in getLastRunStatuses for aborted runs with warnings or
     errors rather than reporting Started
-  * Filter out legacy snapraid.conf symlink in buildLabelMap
   * Check /usr/bin/docker in getContainers to detect Docker across different
     systemd unit install paths
   * Change hook_notification from textarea to textInput and clarify hint
