@@ -64,8 +64,8 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             $obj["array_name"] = $labelMap[$obj["snapraid_conf"]] ?? "";
             if (!empty($obj["cron_uuid"])) {
                 try {
-                    \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $obj["cron_uuid"]], $context);
-                    $obj["scheduled"] = true;
+                    $cron = \OMV\Rpc\Rpc::call("Cron", "get", ["uuid" => $obj["cron_uuid"]], $context);
+                    $obj["scheduled"] = boolval($cron["enable"] ?? false);
                 } catch (\Exception $e) {
                     // Cron entry no longer exists; report unscheduled without
                     // writing back to the DB to avoid triggering an Apply banner.
@@ -201,7 +201,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $objects = [];
         $status = "";
         // check to see if docker is installed and running
-        if (file_exists("/lib/systemd/system/docker.service")) {
+        if (file_exists("/usr/bin/docker")) {
             $systemCtl = new \OMV\System\SystemCtl("docker");
             $running = $systemCtl->isActive();
             $status = $running ? gettext("running") : gettext("stopped");
@@ -226,6 +226,9 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                     continue;
                 }
                 $parts = explode(",", $cnt, 3);
+                if (count($parts) < 3) {
+                    continue;
+                }
                 $objects[] = [
                     "image" => $parts[0],
                     "name" => $parts[1],
@@ -296,14 +299,14 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
                 if (!$completed && strpos($lines[$j], 'Total time elapsed for SnapRAID') !== false) {
                     $completed = true;
                 }
-                if (!$hasWarn && strpos($lines[$j], ': WARN: \'') !== false) {
+                if (!$hasWarn && (strpos($lines[$j], ': WARN: \'') !== false || strpos($lines[$j], ': ERROR: \'') !== false)) {
                     $hasWarn = true;
                 }
             }
-            if (!$completed) {
-                $status = 'Started';
-            } elseif ($hasWarn) {
+            if ($hasWarn) {
                 $status = 'WARNING';
+            } elseif (!$completed) {
+                $status = 'Started';
             } else {
                 $status = 'OK';
             }
@@ -326,6 +329,7 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
             if ($entry->isDot()) continue;
             if (!$entry->isLink()) continue;
             $path = $entry->getPathname();
+            if (basename($path) === "snapraid.conf") continue;
             if (!preg_match("/\.conf$/i", $path)) continue;
             $real = realpath($path);
             if ($real === false) continue;
@@ -563,11 +567,11 @@ class OMVRpcServiceSnapRaidAio extends \OMV\Rpc\ServiceAbstract
         $verifyOutput = [];
         $verifyProc->execute($verifyOutput, $verifyExitCode);
         if ($verifyExitCode !== 0) {
-            throw new \OMV\Exception(
+            throw new \OMV\Exception(sprintf(
                 "Apprise is installed but its Python environment is broken (ModuleNotFoundError). " .
                 "Re-run the AIO script to reinstall it: %s",
                 implode(" ", $verifyOutput)
-            );
+            ));
         }
 
         $subject = "SnapRAID AIO - test notification";

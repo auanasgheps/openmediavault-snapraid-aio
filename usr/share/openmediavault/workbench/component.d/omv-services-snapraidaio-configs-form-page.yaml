@@ -79,7 +79,7 @@ data:
             value: ""
             hint: _("UUID only, e.g. xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx. Do not paste the full ping URL — the base URL is added automatically.")
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
@@ -90,7 +90,7 @@ data:
             value: "https://hc-ping.com/"
             hint: _("Only change if using a self-hosted Healthchecks.io instance. Must include the trailing slash.")
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
@@ -122,7 +122,7 @@ data:
             hint: _("Attach the full report to the notification when a warning is issued. Not all services support attachments.")
             value: false
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
@@ -154,19 +154,17 @@ data:
             hint: _("Attach the full report to the email when a warning is issued.")
             value: false
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
                     prop: apprise_email
 
-      - type: textarea
+      - type: textInput
         name: hook_notification
         label: _("Custom notification hook")
         value: ""
-        monospace: true
-        rows: 2
-        hint: _("Legacy option, superseded by Apprise. Script or command called instead of the default email. SUBJECT and BODY are passed as parameters. Runs as root — enter only trusted commands.")
+        hint: _("Legacy option, superseded by Apprise. Absolute path to an executable script called instead of the default email. SUBJECT and BODY are passed as parameters.")
 
       - type: divider
         title: _("Sync thresholds")
@@ -257,7 +255,7 @@ data:
         label: _("Log retention (days)")
         value: 0
         min: 0
-        hint: _("Days to keep log files. 0 keeps logs forever.")
+        hint: _("Days to keep log files. 0 disables saving log files, which also disables the Last Log tool.")
       - type: textInput
         name: snapraid_log_dir
         label: _("SnapRAID log directory")
@@ -276,7 +274,7 @@ data:
             label: _("Include SMART data in notification")
             value: false
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
@@ -294,7 +292,7 @@ data:
             label: _("Include status in notification")
             value: false
             modifiers:
-              - type: disabled
+              - type: hidden
                 constraint:
                   operator: falsy
                   arg0:
@@ -316,7 +314,7 @@ data:
             - [1, _("Pause / unpause")]
             - [2, _("Stop / restart")]
         modifiers:
-          - type: disabled
+          - type: hidden
             constraint:
               operator: falsy
               arg0:
@@ -337,7 +335,7 @@ data:
             - dir: asc
               prop: name
         modifiers:
-          - type: disabled
+          - type: hidden
             constraint:
               operator: falsy
               arg0:
@@ -355,7 +353,7 @@ data:
         value: ""
         hint: _("Display name shown in the log output.")
         modifiers:
-          - type: disabled
+          - type: hidden
             constraint:
               operator: falsy
               arg0:
@@ -368,7 +366,7 @@ data:
         value: ""
         hint: _("Shell command or script path. Runs as root before SnapRAID operations start — enter only trusted commands.")
         modifiers:
-          - type: disabled
+          - type: hidden
             constraint:
               operator: falsy
               arg0:
@@ -380,7 +378,7 @@ data:
         value: ""
         hint: _("Display name shown in the log output.")
         modifiers:
-          - type: disabled
+          - type: hidden
             constraint:
               operator: falsy
               arg0:
@@ -393,7 +391,7 @@ data:
         value: ""
         hint: _("Shell command or script path. Runs as root after SnapRAID operations complete — enter only trusted commands.")
         modifiers:
-          - type: disabled
+          - type: hidden
             constraint:
               operator: falsy
               arg0:
@@ -405,7 +403,7 @@ data:
         value: false
         hint: _("Run the after hook before spinning down disks instead of after.")
         modifiers:
-          - type: disabled
+          - type: hidden
             constraint:
               operator: falsy
               arg0:

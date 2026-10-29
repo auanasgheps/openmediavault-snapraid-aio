@@ -8,6 +8,21 @@ openmediavault-snapraid-aio (8.2) stable; urgency=low
     count failures
   * Default SNAPRAID_LOG_DIR in config file template to /root when left empty,
     matching the WebGUI hint and RPC expectations
+  * Fix conditionally visible fields in config form using type: disabled
+    instead of type: hidden, preventing omitted form fields and schema
+    validation errors on save
+  * Fix fatal PHP 8 TypeError in testNotification RPC when Apprise
+    verification fails by wrapping exception message in sprintf
+  * Accurately report scheduled status in getConfigList by inspecting
+    the cron task's enable property
+  * Report WARNING in getLastRunStatuses for aborted runs with warnings or
+    errors rather than reporting Started
+  * Filter out legacy snapraid.conf symlink in buildLabelMap
+  * Check /usr/bin/docker in getContainers to detect Docker across different
+    systemd unit install paths
+  * Change hook_notification from textarea to textInput and clarify hint
+    that an absolute path to an executable script is required
+  * Clarify retention_days hint that 0 disables log file saving
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 28 Oct 2026 00:00:00 +0000
 
